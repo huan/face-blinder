@@ -1,4 +1,9 @@
-import { createWriteStream } from 'fs'
+import {
+  createWriteStream,
+  statSync,
+} from 'fs'
+
+import { DbCache }   from './src/db-cache'
 
 import {
   Contact,
@@ -8,11 +13,21 @@ import {
   Room,
   Wechaty,
 }                   from 'wechaty'
-// import { Facenet }  from 'facenet'
+import {
+  Facenet,
+  Face,
+  imageMd5,
+  saveImage,
+}  from 'facenet'
 
 const qrcodeTerminal = require('qrcode-terminal')
 
+const db = new DbCache(__dirname + '/level.db')
+
 async function main() {
+  const facenet = new Facenet()
+  // await facenet.init()
+
   const bot = Wechaty.instance({
     profile: 'face-blinder'
   })
@@ -56,35 +71,30 @@ async function main() {
         return
       }
 
-      return processPhoto(message)
+      const fullpath = await savePhoto(message)
+      const faceList = await facenet.align(fullpath)
+      await Promise.all(faceList.map(f => facenet.embedding(f)))
+      await Promise.all(faceList.map(saveFace))
+      const faceFile = await getSimilarFaceFile(faceList[0])
+      await message.say(new MediaMessage(faceFile))
+      await message.say(faceFile)
+
     } else {
       if (/^learn$/i.test(content)) {
-        return learnRoom(room)
+        const avatarFileList = await getAvatarListFromRoom(room)
+        for (let file of avatarFileList) {
+          const faceList = await facenet.align(file)
+          await Promise.all(faceList.map(f => facenet.embedding(f)))
+          await Promise.all(faceList.map(saveFace))
+        }
       }
     }
   })
   .init()
 }
 
-// export async function saveMediaFile(message: MediaMessage) {
-//   const filename = message.filename()
-//   console.log('IMAGE local filename: ' + filename)
-
-//   const fileStream = createWriteStream(filename)
-
-//   console.log('start to readyStream()')
-//   try {
-//     const netStream = await message.readyStream()
-//     netStream
-//       .pipe(fileStream)
-//       .on('close', _ => console.log('finish readyStream()'))
-//   } catch (e) {
-//     console.error('stream error:', e)
-//   }
-// }
-
-async function processPhoto(message: MediaMessage) {
-  const filename = message.filename()
+async function savePhoto(message: MediaMessage): Promise<string> {
+  const filename = __dirname + '/data/' + message.filename()
   console.log('IMAGE local filename: ' + filename)
 
   const fileStream = createWriteStream(filename)
@@ -92,57 +102,66 @@ async function processPhoto(message: MediaMessage) {
   console.log('start to readyStream()')
   try {
     const netStream = await message.readyStream()
-    netStream
+    return new Promise<string>(resolve=> {
+      netStream
       .pipe(fileStream)
-      .on('close', _ => {
+
+      fileStream.once('close', _ => {
         console.log('finish pipe stream')
-        // const fullPathName = __dirname + '/' + filename
-        // console.log(fullPathName)
-        // setTimeout(() => message.say(new MediaMessage(fullPathName)), 1000)
-        message.say(new MediaMessage(__dirname + '/node_modules/wechaty/image/BotQrcode.png'))
+        const stat = statSync(filename)
+        console.log('file ', filename, ' size: ', stat.size)
+        resolve(filename)
       })
+    })
   } catch (e) {
     console.error('stream error:', e)
+    throw e
   }
 
 }
 
-//   const filename = message.filename()
-//   const imageWriteStream = createWriteStream(filename)
-//   const imageReadStream = await message.readyStream()
-
-//   await new Promise(resolve => {
-//     imageReadStream
-//     .pipe(imageWriteStream)
-//     .on('close', resolve)
-//   })
-
-//   message.say(new MediaMessage(__dirname + '/' + filename))
-
-//   // save File
-//   // process face
-//   // load all faces
-//   // compare distance
-//   // message.say('similar photos')
-// }
-
-async function learnRoom(room: Room) {
+async function getAvatarListFromRoom(room: Room): Promise<string[]> {
   const contactList = room.memberList()
-  for (const contact of contactList) {
-    log.info('learnRoom', 'processing %s', contact.name())
-    await learnContact(contact)
-  }
+  return await Promise.all(contactList.map(getContactAvatar))
 }
 
-async function learnContact(contact: Contact) {
+async function getContactAvatar(contact: Contact): Promise<string> {
   const name = contact.name()
-  const avatarFileName = `${name}.jpg`
+  const avatarFileName = `${__dirname}/data/${name}.jpg`
 
   const avatarReadStream = await contact.avatar()
   const avatarWriteStream = createWriteStream(avatarFileName)
   avatarReadStream.pipe(avatarWriteStream)
 
-  // saveFace()
+  return avatarFileName
+}
+
+async function saveFace(face: Face): Promise<void> {
+  const md5 = imageMd5(face.imageData)
+  await db.put(md5, face.toJSON())
+  const faceFile = __dirname + '/data/' + md5 + '.jpg'
+  await saveImage(face.imageData, faceFile)
+}
+
+async function getSimilarFaceFile(face: Face): Promise<string> {
+  const dbList = await db.list()
+
+  let similarFace = face
+  let minDistance: number = 999
+
+  Object.keys(dbList)
+    .map(k => dbList[k])
+    .map(Face.fromJSON)
+    .forEach(f => {
+      const dist = face.distance(f)
+      if (dist < minDistance) {
+        similarFace = f
+        minDistance = dist
+      }
+    })
+
+  const md5 = imageMd5(similarFace.imageData)
+  return __dirname + '/data/' + md5 + '.jpg'
 }
 
 main()
