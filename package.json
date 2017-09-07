@@ -20,7 +20,7 @@
   "dependencies": {
     "facenet": "^0.2.24",
     "leveldown": "^1.7.2",
-    "levelup": "2.0.0-rc1",
+    "levelup": "^2.0.0-rc1",
     "qrcode-terminal": "^0.11.0"
   },
   "devDependencies": {
