@@ -8,10 +8,10 @@ import {
   Face,
 }                   from 'facenet'
 
-import { Db }       from './db'
+import { Store }       from './store'
 
 export class Blinder {
-  private nameDb:         Db<string, string>
+  private nameStore:      Store<string, string>
   private facenet:        Facenet
   private faceCache:      FaceCache
   private alignmentCache: AlignmentCache
@@ -24,7 +24,7 @@ export class Blinder {
     this.facenet        = new Facenet()
     this.alignmentCache = new AlignmentCache(this.facenet, this.workDir)
     this.embeddingCache = new EmbeddingCache(this.facenet, this.workDir)
-    this.nameDb         = new Db(path.join(this.workDir, 'db'))
+    this.nameStore      = new Store(path.join(this.workDir, 'store.name'))
   }
 
   public async init(): Promise<void> {
@@ -32,7 +32,6 @@ export class Blinder {
     await this.faceCache.init()
     await this.alignmentCache.init()
     await this.embeddingCache.init()
-    // await this.db.init
   }
 
   public async photo(file: string): Promise<Face[]> {
@@ -44,7 +43,7 @@ export class Blinder {
   }
 
   public async face(face: Face, name: string): Promise<number> {
-    this.nameDb.put(face.md5, name)
+    this.nameStore.put(face.md5, name)
 
     let   counter  = 0
     const faceList = this.search(face)
@@ -54,12 +53,12 @@ export class Blinder {
         continue
       }
 
-      const existName = await this.nameDb.get(face.md5)
+      const existName = await this.nameStore.get(face.md5)
       if (existName) { // do not consider '0' or ''(empty string) of name
         continue
       }
 
-      this.nameDb.put(similarFace.md5, name)
+      this.nameStore.put(similarFace.md5, name)
       counter++
     }
 

@@ -6,7 +6,7 @@ import * as path  from 'path'
 // const t = require('tap')  // tslint:disable:no-shadowed-variable
 import * as test from 'blue-tape'
 
-// import { log }    from 'brolog'
+// import { log }    from './config'
 // log.level('silly')
 
 import { Store }  from './store'
