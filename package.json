@@ -18,12 +18,13 @@
   },
   "homepage": "https://github.com/zixia/face-blinder#readme",
   "dependencies": {
-    "facenet": "^0.2.24",
-    "leveldown": "^1.7.2",
-    "levelup": "^2.0.0-rc1",
+    "encoding-down": "^2.2.1",
+    "facenet": "^0.2.48",
+    "leveldown": "^1.8.0",
+    "levelup": "^2.0.0-rc3",
     "qrcode-terminal": "^0.11.0"
   },
   "devDependencies": {
-    "@types/levelup": "0.0.30"
+    "@types/node": "^8.0.28"
   }
 }

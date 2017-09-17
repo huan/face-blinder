@@ -2,15 +2,16 @@ import * as path    from 'path'
 
 import {
   AlignmentCache,
-  DbCache,
   EmbeddingCache,
   FaceCache,
   Facenet,
   Face,
 }                   from 'facenet'
 
+import { Db }       from './db'
+
 export class Blinder {
-  private nameDb:         DbCache
+  private nameDb:         Db<string, string>
   private facenet:        Facenet
   private faceCache:      FaceCache
   private alignmentCache: AlignmentCache
@@ -23,7 +24,7 @@ export class Blinder {
     this.facenet        = new Facenet()
     this.alignmentCache = new AlignmentCache(this.facenet, this.workDir)
     this.embeddingCache = new EmbeddingCache(this.facenet, this.workDir)
-    this.nameDb         = new DbCache(path.join(this.workDir, 'db'))
+    this.nameDb         = new Db(path.join(this.workDir, 'db'))
   }
 
   public async init(): Promise<void> {
