@@ -60,3 +60,5 @@ typings/
 *.wechaty.json
 
 package-lock.json
+t.*
+.*.swp
