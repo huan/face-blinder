@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6"
+      "target": "es2017"
     , "module": "commonjs"
     , "outDir": "dist"
     , "declaration": true
@@ -17,6 +17,12 @@
     , "noUnusedParameters": false
     , "noImplicitThis": false
     , "traceResolution": false
+
+    , "lib": [
+      "es2017",
+      "esnext.asynciterable",
+      "dom"
+    ]
   }
   , "exclude": [
       "node_modules/"
@@ -24,10 +30,8 @@
   ]
   , "include": [
        "bin/*.ts"
-     , "example/**/*.ts"
+     , "examples/**/*.ts"
      , "src/**/*.ts"
-     , "test/**/*.spec.ts"
-     , "bot/**/*.ts"
-     , "app/**/*.ts"
+     , "tests/**/*.spec.ts"
   ]
 }
