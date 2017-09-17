@@ -21,7 +21,7 @@ export class Store<K, V> {
   constructor(
     public workDir: string
   ) {
-    log.verbose('Db', 'constructor()')
+    log.verbose('Store', 'constructor()')
 
     // https://twitter.com/juliangruber/status/908688876381892608
     const encoded = encoding(
@@ -31,12 +31,12 @@ export class Store<K, V> {
   }
 
   public async put(key: K, value: V): Promise<void> {
-    log.verbose('Db', 'put(%s, %s)', key, value)
+    log.verbose('Store', 'put(%s, %s)', key, value)
     return await this.levelDb.put(key, value)
   }
 
   public async get(key: K): Promise<V | null> {
-    log.verbose('Db', 'get(%s)', key)
+    log.verbose('Store', 'get(%s)', key)
     try {
       return await this.levelDb.get(key)
     } catch (e) {
@@ -48,12 +48,12 @@ export class Store<K, V> {
   }
 
   public del(key: K): Promise<void> {
-    log.verbose('Db', 'del(%s)', key)
+    log.verbose('Store', 'del(%s)', key)
     return this.levelDb.del(key)
   }
 
   public async* keys(): AsyncIterableIterator<K> {
-    log.verbose('Db', 'keys()')
+    log.verbose('Store', 'keys()')
 
     const keyStream = this.levelDb.createKeyStream()
 
@@ -84,7 +84,7 @@ export class Store<K, V> {
   }
 
   public async* values(): AsyncIterableIterator<V> {
-    log.verbose('Db', 'values()')
+    log.verbose('Store', 'values()')
 
     const valueStream = this.levelDb.createValueStream()
 
@@ -115,7 +115,7 @@ export class Store<K, V> {
   }
 
   public async count(): Promise<number> {
-    log.verbose('Db', 'count()')
+    log.verbose('Store', 'count()')
 
     let count = 0
     for await (const _ of this.keys()) {
@@ -125,7 +125,7 @@ export class Store<K, V> {
   }
 
   public async *[Symbol.asyncIterator](): AsyncIterator<[K, V]> {
-    log.verbose('Db', '*[Symbol.asyncIterator]()')
+    log.verbose('Store', '*[Symbol.asyncIterator]()')
 
     const readStream = this.levelDb.createReadStream()
 
@@ -156,7 +156,7 @@ export class Store<K, V> {
   }
 
   public async destroy(): Promise<void> {
-    log.verbose('Db', 'destroy()')
+    log.verbose('Store', 'destroy()')
     await this.levelDb.close()
     await util.promisify(rimraf)(this.workDir)
   }
