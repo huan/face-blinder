@@ -52,37 +52,76 @@ export class Store<K, V> {
     return this.levelDb.del(key)
   }
 
-  public keys(): Promise<K[]> {
+  public async* keys(): AsyncIterableIterator<K> {
     log.verbose('Db', 'keys()')
-    const keyList = [] as K[]
 
-    return new Promise((resolve, reject) => {
-      this.levelDb
-            .createKeyStream()
-              .on('data', key => keyList.push(key))
-              .on('end', ()   => resolve(keyList))
-              .on('error', reject)
+    const keyStream = this.levelDb.createKeyStream()
+
+    const endPromise = new Promise<false>((resolve, reject) => {
+      keyStream
+        .once('end',  () => resolve(false))
+        .once('error', e => reject(e))
     })
+
+    let key: K | false
+
+    do {
+      const keyPromise = new Promise<K>((resolve, reject) => {
+        keyStream.once('data', key => resolve(key))
+      })
+
+      key = await Promise.race([
+        keyPromise,
+        endPromise,
+      ])
+
+      if (key) {
+        yield key
+      }
+
+    } while (key)
+
   }
 
-  public values(): Promise<V[]> {
+  public async* values(): AsyncIterableIterator<V> {
     log.verbose('Db', 'values()')
 
-    const valueList = [] as V[]
+    const valueStream = this.levelDb.createValueStream()
 
-        return new Promise((resolve, reject) => {
-          this.levelDb
-            .createValueStream()
-              .on('data', value => valueList.push(value))
-              .on('end', ()     => resolve(valueList))
-              .on('error', reject)
-        })
+    const endPromise = new Promise<false>((resolve, reject) => {
+      valueStream
+        .once('end',  () => resolve(false))
+        .once('error', e => reject(e))
+    })
+
+    let value: V | false
+
+    do {
+      const valuePromise = new Promise<V>((resolve, reject) => {
+        valueStream.once('data', value => resolve(value))
+      })
+
+      value = await Promise.race([
+        valuePromise,
+        endPromise,
+      ])
+
+      if (value) {
+        yield value
+      }
+
+    } while (value)
+
   }
 
   public async count(): Promise<number> {
     log.verbose('Db', 'count()')
-    const keyList = await this.keys()
-    return keyList.length
+
+    let count = 0
+    for await (const _ of this.keys()) {
+      count++
+    }
+    return count
   }
 
   public async *[Symbol.asyncIterator](): AsyncIterator<[K, V]> {
@@ -115,19 +154,6 @@ export class Store<K, V> {
     } while (pair)
 
   }
-
-  // public async pairs(): Promise<[K, V][]> {
-  //   const pairList = [] as [K, V][]
-  //   return new Promise<[K, V][]>((resolve, reject) => {
-  //     this.levelDb
-  //       .createReadStream()
-  //         .on('data', data => {
-  //           pairList.push([data.key, data.value])
-  //         })
-  //         .on('end', () => resolve(pairList))
-  //         .on('error', reject)
-  //   })
-  // }
 
   public async destroy(): Promise<void> {
     log.verbose('Db', 'destroy()')
