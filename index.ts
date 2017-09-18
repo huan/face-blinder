@@ -6,7 +6,7 @@ import {
 }         from './src/bot'
 
 async function main(): Promise<number> {
-  log.level('silly')
+  log.level('verbose')
 
   const bot = new Bot()
   await bot.start()

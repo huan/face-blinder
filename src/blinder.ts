@@ -56,7 +56,14 @@ export class Blinder {
 
     const faceList = await this.alignmentCache.align(file)
     await Promise.all(
-      faceList.map(f => this.embeddingCache.embedding(f))
+      faceList.map(async f => {
+        try {
+          f.embedding
+        } catch (e) {
+          f.embedding = await this.embeddingCache.embedding(f)
+        }
+        console.log('photo', f.md5, f.embedding)
+      })
     )
     await Promise.all(
       faceList.map(f => this.faceCache.put(f))
@@ -109,6 +116,10 @@ export class Blinder {
       if (!theFace) {
         continue
       }
+
+      console.log('similar', face.md5, face.embedding)
+      console.log('similar', theFace.md5, theFace.embedding)
+
       const dist = face.distance(theFace)
       if (dist <= threshold) {
         faceList.push(theFace)
