@@ -116,7 +116,6 @@ test('values()', async t => {
   }
 })
 
-
 async function* storeFixture() {
   const tmpDir = fs.mkdtempSync(
     path.join(

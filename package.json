@@ -4,6 +4,7 @@
   "description": "Assitant Bot for Whom is Suffering form Face Blindness",
   "main": "index.js",
   "scripts": {
+    "start": "ts-node index.ts",
     "test": "tape -r ts-node/register \"src/**/*.spec.ts\" \"test/**/*.spec.ts\""
   },
   "repository": {
@@ -22,7 +23,8 @@
     "facenet": "^0.2.48",
     "leveldown": "^1.8.0",
     "levelup": "^2.0.0-rc3",
-    "qrcode-terminal": "^0.11.0"
+    "qrcode-terminal": "^0.11.0",
+    "wechaty": "^0.8.228"
   },
   "devDependencies": {
     "@types/blue-tape": "^0.1.31",

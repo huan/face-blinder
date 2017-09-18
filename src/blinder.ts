@@ -8,7 +8,13 @@ import {
   Face,
 }                   from 'facenet'
 
-import { Store }       from './store'
+import {
+  log,
+  MODULE_ROOT,
+}                   from './config'
+import {
+  Store,
+}                   from './store'
 
 export class Blinder {
   private nameStore:      Store<string, string>
@@ -19,34 +25,59 @@ export class Blinder {
 
 
   constructor(
-    private workDir: string,
+    private workDir = path.join(MODULE_ROOT, 'data'),
   ) {
+    log.verbose('Blinder', 'constructor()')
+
     this.facenet        = new Facenet()
     this.alignmentCache = new AlignmentCache(this.facenet, this.workDir)
     this.embeddingCache = new EmbeddingCache(this.facenet, this.workDir)
-    this.nameStore      = new Store(path.join(this.workDir, 'store.name'))
+    this.nameStore      = new Store(path.join(this.workDir, 'name.store'))
   }
 
   public async init(): Promise<void> {
+    log.verbose('Blinder', 'init()')
+
     await this.facenet.init()
-    await this.faceCache.init()
     await this.alignmentCache.init()
+    // XXX
+    this.faceCache = this.alignmentCache.faceCache
     await this.embeddingCache.init()
   }
 
+  public async quit(): Promise<void> {
+    log.verbose('Blinder', 'quit()')
+
+    await this.facenet.quit()
+  }
+
   public async photo(file: string): Promise<Face[]> {
+    log.verbose('Blinder', 'photo(%s)', file)
+
     const faceList = await this.alignmentCache.align(file)
     await Promise.all(
       faceList.map(f => this.embeddingCache.embedding(f))
     )
+    await Promise.all(
+      faceList.map(f => this.faceCache.put(f))
+    )
     return faceList
   }
 
-  public async face(face: Face, name: string): Promise<number> {
+  public async name(face: Face)               : Promise<string | null>
+  public async name(face: Face, name: string) : Promise<number>
+
+  public async name(face: Face, name?: string): Promise<number | string | null> {
+    log.verbose('Blinder', 'name(%s, %s)', face, name)
+
+    if (!name) {
+      return await this.nameStore.get(face.md5)
+    }
+
     this.nameStore.put(face.md5, name)
 
     let   counter  = 0
-    const faceList = this.search(face)
+    const faceList = await this.similar(face)
 
     for (const similarFace of faceList) {
       if (similarFace === face) {
@@ -65,7 +96,33 @@ export class Blinder {
     return counter
   }
 
-  search(face: Face, threshold = 0.75): Face[] {
-    const faceList = await getSimilarFaceFile(faceList[0])
+  public async similar(face: Face, threshold = 0.75): Promise<Face[]> {
+    log.verbose('Blinder', 'similar(%s, %s)', face, threshold)
+
+    const faceList = [] as Face[]
+
+    const dbEntryList = await this.faceCache.db.list()
+    for (const md5 of Object.keys(dbEntryList)) {
+      log.silly('Blinder', 'similar() md5: %s', md5)
+
+      const theFace = await this.faceCache.get(md5)
+      if (!theFace) {
+        continue
+      }
+      const dist = face.distance(theFace)
+      if (dist <= threshold) {
+        faceList.push(theFace)
+      }
+    }
+
+    return faceList
   }
+
+  public file(face: Face): string {
+    log.verbose('Blinder', 'file(%s)', face)
+
+    return this.faceCache.file(face.md5)
+  }
+
 }
+

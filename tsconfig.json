@@ -19,7 +19,8 @@
     , "traceResolution": false
 
     , "lib": [
-      "esnext"
+        "esnext"
+      , "dom"
     ]
   }
   , "exclude": [
