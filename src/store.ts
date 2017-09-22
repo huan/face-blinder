@@ -28,6 +28,7 @@ export class Store<K, V> {
       leveldown<K, V>(workDir)
     )
     this.levelDb  = levelup(encoded)
+    this.levelDb.setMaxListeners(17)  // default is Infinity
   }
 
   public async put(key: K, value: V): Promise<void> {
@@ -40,7 +41,7 @@ export class Store<K, V> {
     try {
       return await this.levelDb.get(key)
     } catch (e) {
-      if (/NotFoundError/.test(e)) {
+      if (/^NotFoundError/.test(e)) {
         return null
       }
       throw e
@@ -52,65 +53,51 @@ export class Store<K, V> {
     return this.levelDb.del(key)
   }
 
+  // public async* keys(): AsyncIterableIterator<K> {
+  //   log.verbose('Store', 'keys()')
+
+  //   const keyStream = this.levelDb.createKeyStream()
+
+  //   const endPromise = new Promise<false>((resolve, reject) => {
+  //     keyStream
+  //       .once('end',  () => resolve(false))
+  //       .once('error', e => reject(e))
+  //   })
+
+  //   let key: K | false
+
+  //   do {
+  //     const keyPromise = new Promise<K>((resolve, reject) => {
+  //       keyStream.once('data', key => resolve(key))
+  //     })
+
+  //     key = await Promise.race([
+  //       keyPromise,
+  //       endPromise,
+  //     ])
+
+  //     if (key) {
+  //       yield key
+  //     }
+
+  //   } while (key)
+
+  // }
+
   public async* keys(): AsyncIterableIterator<K> {
     log.verbose('Store', 'keys()')
 
-    const keyStream = this.levelDb.createKeyStream()
-
-    const endPromise = new Promise<false>((resolve, reject) => {
-      keyStream
-        .once('end',  () => resolve(false))
-        .once('error', e => reject(e))
-    })
-
-    let key: K | false
-
-    do {
-      const keyPromise = new Promise<K>((resolve, reject) => {
-        keyStream.once('data', key => resolve(key))
-      })
-
-      key = await Promise.race([
-        keyPromise,
-        endPromise,
-      ])
-
-      if (key) {
-        yield key
-      }
-
-    } while (key)
-
+    for await (const [key, _] of this) {
+      yield key
+    }
   }
 
   public async* values(): AsyncIterableIterator<V> {
     log.verbose('Store', 'values()')
 
-    const valueStream = this.levelDb.createValueStream()
-
-    const endPromise = new Promise<false>((resolve, reject) => {
-      valueStream
-        .once('end',  () => resolve(false))
-        .once('error', e => reject(e))
-    })
-
-    let value: V | false
-
-    do {
-      const valuePromise = new Promise<V>((resolve, reject) => {
-        valueStream.once('data', value => resolve(value))
-      })
-
-      value = await Promise.race([
-        valuePromise,
-        endPromise,
-      ])
-
-      if (value) {
-        yield value
-      }
-
-    } while (value)
+    for await (const [_, value] of this) {
+      yield value
+    }
 
   }
 
