@@ -114,6 +114,31 @@ export class Store<K, V> {
   public async *[Symbol.asyncIterator](): AsyncIterator<[K, V]> {
     log.verbose('Store', '*[Symbol.asyncIterator]()')
 
+    const iterator = (this.levelDb as any).db.iterator()
+
+    let pair: [K, V] | null
+    do {
+      pair = await new Promise<[K, V] | null>((resolve, reject) => {
+        iterator.next(function (err, key, value) {
+          if (err) {
+            reject(err)
+          }
+          if (!key && !value) {
+            resolve(null)
+          }
+          resolve([key, value])
+        })
+      })
+      if (pair) {
+        yield pair
+      }
+    } while (pair)
+
+  }
+
+  public async *streamAsyncIterator(): AsyncIterator<[K, V]> {
+    log.warn('Store', 'DEPRECATED *[Symbol.asyncIterator]()')
+
     const readStream = this.levelDb.createReadStream()
 
     const endPromise = new Promise<false>((resolve, reject) => {
