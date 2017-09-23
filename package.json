@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/zixia/face-blinder#readme",
   "dependencies": {
+    "app-root-path": "^2.0.1",
     "encoding-down": "^2.2.1",
     "facenet": "^0.2.48",
     "leveldown": "^1.8.0",
@@ -27,10 +28,15 @@
     "wechaty": "^0.8.228"
   },
   "devDependencies": {
+    "@types/app-root-path": "^1.2.4",
     "@types/blue-tape": "^0.1.31",
     "@types/node": "^8.0.28",
     "@types/rimraf": "^2.0.2",
+    "@types/sinon": "^2.3.5",
+    "@types/sinon-test": "^1.0.2",
     "blue-tape": "^1.0.0",
+    "sinon": "^3.3.0",
+    "sinon-test": "^2.1.1",
     "ts-node": "^3.3.0",
     "typescript": "^2.5.2"
   }

@@ -14,9 +14,10 @@ const qrcodeTerminal  = require('qrcode-terminal')
 import {
   Blinder,
 }                     from './blinder'
+
 import {
-  MODULE_ROOT,
-}                     from './config'
+  path as APP_ROOT,
+}                     from 'app-root-path'
 
 export class Bot {
   private wechaty: Wechaty
@@ -85,7 +86,7 @@ export class Bot {
         }
 
         const fullpath = await this.savePhoto(message)
-        const faceList = await this.blinder.photo(fullpath)
+        const faceList = await this.blinder.see(fullpath)
 
         for (const face of faceList) {
           const similarFaceList = await this.blinder.similar(face)
@@ -102,9 +103,9 @@ export class Bot {
           for (const contact of room.memberList()) {
             const file = await this.avatarFile(contact)
             const name = contact.name()
-            const faceList = await this.blinder.photo(file)
+            const faceList = await this.blinder.see(file)
             for (const face of faceList) {
-              await this.blinder.name(face, name)
+              await this.blinder.remember(face, name)
             }
           }
         }
@@ -115,7 +116,7 @@ export class Bot {
 
   private async savePhoto(message: MediaMessage): Promise<string> {
     const filename = path.join(
-      MODULE_ROOT,
+      APP_ROOT,
       'data',
       message.filename(),
     )
