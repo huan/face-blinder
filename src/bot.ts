@@ -25,7 +25,7 @@ export class Bot {
 
   constructor() {
     this.wechaty = Wechaty.instance({
-      profile: 'face-blinder'
+      profile: 'face-blinder',
     })
     this.blinder = new Blinder()
   }
@@ -55,7 +55,7 @@ export class Bot {
     .on('logout', user  => log.info('Bot', `${user.name()} logouted`))
     .on('error',  e     => log.info('Bot', 'error: %s', e))
     .on('login',  async function(user) {
-      let msg = `${user.name()} logined`
+      const msg = `${user.name()} logined`
 
       log.info('Bot', msg)
       await this.say(msg)
@@ -127,7 +127,7 @@ export class Bot {
     console.log('start to readyStream()')
     try {
       const netStream = await message.readyStream()
-      return new Promise<string>(resolve=> {
+      return new Promise<string>(resolve => {
         fileStream.once('close', _ => {
           console.log('finish pipe stream')
           const stat = fs.statSync(filename)

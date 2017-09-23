@@ -10,4 +10,3 @@ export { log }    from 'brolog'
 // export const rootPath = parentDirectory() === 'dist'
 //                             ? path.normalize(`${__dirname}/../..`)
 //                             : path.normalize(`${__dirname}/..`)
-

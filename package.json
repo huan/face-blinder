@@ -4,7 +4,8 @@
   "description": "Assitant Bot for Whom is Suffering form Face Blindness",
   "main": "index.js",
   "scripts": {
-    "lint": "tslint --project tsconfig.json && npm run clean:dist && tsc --noEmit",
+    "clean": "shx rm -fr dist/*",
+    "lint": "tslint --project tsconfig.json && npm run clean && tsc --noEmit",
     "start": "ts-node index.ts",
     "test": "tape -r ts-node/register \"src/**/*.spec.ts\" \"test/**/*.spec.ts\""
   },
@@ -21,10 +22,8 @@
   "homepage": "https://github.com/zixia/face-blinder#readme",
   "dependencies": {
     "app-root-path": "^2.0.1",
-    "encoding-down": "^2.2.1",
     "facenet": "^0.2.48",
-    "leveldown": "^1.8.0",
-    "levelup": "^2.0.0-rc3",
+    "flash-store": "0.0.5",
     "qrcode-terminal": "^0.11.0",
     "wechaty": "^0.8.228"
   },
@@ -36,6 +35,7 @@
     "@types/sinon": "^2.3.5",
     "@types/sinon-test": "^1.0.2",
     "blue-tape": "^1.0.0",
+    "shx": "^0.2.2",
     "sinon": "^3.3.0",
     "sinon-test": "^2.1.1",
     "ts-node": "^3.3.0",

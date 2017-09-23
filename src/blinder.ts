@@ -66,7 +66,7 @@ export class Blinder {
     await Promise.all(
       faceList
       .filter(f => !f.embedding)
-      .map(updateEmbedding)
+      .map(updateEmbedding),
     )
 
     return faceList
@@ -81,7 +81,7 @@ export class Blinder {
   public async recognize(face: Face): Promise<string | null> {
     const faceList = await this.similar(face)
     const nameList = await Promise.all(
-      faceList.map(async f => await this.nameStore.get(f.md5))
+      faceList.map(async f => await this.nameStore.get(f.md5)),
     )
 
     const counter = {}
@@ -103,9 +103,22 @@ export class Blinder {
     return recognizedName
   }
 
-  public async remember(face: Face, name: string) : Promise<void> {
+  public async remember(face: Face, name: string) : Promise<void>
+  public async remember(face: Face)               : Promise<string | null>
+
+  public async remember(face: Face, name?: string) : Promise<void | string | null> {
     log.verbose('Blinder', 'name(%s, %s)', face, name)
+
+    if (!name) {
+      const storedName = await this.nameStore.get(face.md5)
+      return storedName
+    }
+
     await this.nameStore.put(face.md5, name)
+  }
+
+  public async forget(face: Face): Promise<void> {
+    await this.nameStore.del(face.md5)
   }
 
   public async rememberSimilar(face: Face): Promise<number> {
@@ -167,4 +180,3 @@ export class Blinder {
   }
 
 }
-

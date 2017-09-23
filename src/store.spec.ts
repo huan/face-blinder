@@ -3,8 +3,7 @@ import * as fs    from 'fs'
 import * as os    from 'os'
 import * as path  from 'path'
 
-// const t = require('tap')  // tslint:disable:no-shadowed-variable
-import * as test from 'blue-tape'
+import * as test from 'blue-tape' // tslint:disable:no-shadowed-variable
 
 // import { log }    from './config'
 // log.level('silly')
@@ -17,10 +16,10 @@ const VAL = 'test-value'
 test('constructor()', async t => {
   const tmpDir = path.join(
     os.tmpdir(),
-    `face-blinder.${process.pid}`
+    `face-blinder.${process.pid}`,
   )
   t.doesNotThrow(() => {
-    let store = new Store(tmpDir)
+    const store = new Store(tmpDir)
 
     // need to do something to create the db directory
     store.del('init')
@@ -121,8 +120,8 @@ async function* storeFixture() {
     path.join(
       os.tmpdir(),
       path.sep,
-      'face-blinder-'
-    )
+      'face-blinder-',
+    ),
   )
   const store = new Store(tmpDir)
 

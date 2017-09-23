@@ -19,13 +19,13 @@ export class Store<K, V> {
   >
 
   constructor(
-    public workDir: string
+    public workDir: string,
   ) {
     log.verbose('Store', 'constructor()')
 
     // https://twitter.com/juliangruber/status/908688876381892608
     const encoded = encoding(
-      leveldown<K, V>(workDir)
+      leveldown<K, V>(workDir),
     )
     this.levelDb  = levelup(encoded)
     this.levelDb.setMaxListeners(17)  // default is Infinity
