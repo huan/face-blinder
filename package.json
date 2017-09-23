@@ -4,6 +4,7 @@
   "description": "Assitant Bot for Whom is Suffering form Face Blindness",
   "main": "index.js",
   "scripts": {
+    "lint": "tslint --project tsconfig.json && npm run clean:dist && tsc --noEmit",
     "start": "ts-node index.ts",
     "test": "tape -r ts-node/register \"src/**/*.spec.ts\" \"test/**/*.spec.ts\""
   },
@@ -38,6 +39,7 @@
     "sinon": "^3.3.0",
     "sinon-test": "^2.1.1",
     "ts-node": "^3.3.0",
+    "tslint": "^5.7.0",
     "typescript": "^2.5.2"
   }
 }
