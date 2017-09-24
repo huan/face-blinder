@@ -37,7 +37,7 @@ export class Bot {
     this.bindMessage(this.wechaty)
     await this.wechaty.init()
 
-    return new Promise<void>((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
       this.wechaty.on('logout', () => resolve())
       this.wechaty.on('error', reject)
     })
@@ -88,15 +88,32 @@ export class Bot {
         const fullpath = await this.savePhoto(message)
         const faceList = await this.blinder.see(fullpath)
 
-        for (const face of faceList) {
-          const similarFaceList = await this.blinder.similar(face)
-
-          for (const similarFace of similarFaceList) {
-            const faceFile = this.blinder.file(similarFace)
-            await message.say(new MediaMessage(faceFile))
-            await message.say(faceFile)
-          }
+        if (!faceList.length) {
+          log.verbose('Bot', 'no face found from blinder.see()')
+          return
         }
+
+        const similarFaceList = await this.blinder.similar(faceList[0])
+        if (!similarFaceList.length) {
+          log.verbose('Bot', 'no face found from blinder.similar()')
+          return
+        }
+
+        const faceFile = this.blinder.file(similarFaceList[0])
+        await message.say(new MediaMessage(faceFile))
+        await Wechaty.sleep(500)
+        // await message.say(faceFile)
+        // await Wechaty.sleep(500)
+
+        // for (const face of faceList) {
+        //   const similarFaceList = await this.blinder.similar(face)
+
+          // for (const similarFace of similarFaceList) {
+          //   const faceFile = this.blinder.file(similarFace)
+          //   await message.say(new MediaMessage(faceFile))
+          //   await message.say(faceFile)
+          // }
+        // }
 
       } else {
         if (/^learn$/i.test(content)) {
@@ -108,6 +125,8 @@ export class Bot {
               await this.blinder.remember(face, name)
             }
           }
+          await message.say('learn #' + room.memberList().length + ' contacts in room')
+          await Wechaty.sleep(500)
         }
       }
     })

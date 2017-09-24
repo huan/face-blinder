@@ -1,6 +1,7 @@
+import * as fs      from 'fs'
 import * as path    from 'path'
-import * as util    from 'util'
 import * as rimraf  from 'rimraf'
+import * as util    from 'util'
 
 import {
   path as APP_ROOT,
@@ -36,11 +37,16 @@ export class Blinder {
     this.faceCache      = new FaceCache(this.workDir)
     this.alignmentCache = new AlignmentCache(this.facenet, this.faceCache, this.workDir)
     this.embeddingCache = new EmbeddingCache(this.facenet, this.workDir)
-    this.nameStore      = new FlashStore(path.join(this.workDir, 'name.store'))
   }
 
   public async init(): Promise<void> {
     log.verbose('Blinder', 'init()')
+
+    if (!fs.existsSync(this.workDir)) {
+      fs.mkdirSync(this.workDir)
+    }
+
+    this.nameStore = new FlashStore(path.join(this.workDir, 'name.store'))
 
     await this.facenet.init()
     await this.faceCache.init()
