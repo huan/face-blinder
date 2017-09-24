@@ -1,21 +1,12 @@
-import {
+export {
   log,
-}         from './src/config'
+}               from './src/config'
 import {
-  Bot,
-}         from './src/bot'
+  FaceBlinder,
+}               from './src/face-blinder'
 
-async function main(): Promise<number> {
-  log.level('verbose')
-
-  const bot = new Bot()
-  await bot.start()
-  return 0
+export {
+  FaceBlinder,
 }
 
-main()
-.then(process.exit)
-.catch(e => {
-  console.error(e)
-  process.exit(1)
-})
+export default FaceBlinder

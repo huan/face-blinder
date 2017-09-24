@@ -17,17 +17,15 @@ import {
   Rectangle,
 }                   from 'facenet'
 
-import Blinder      from './blinder'
+import FaceBlinder  from './face-blinder'
 
 import {
   FILE_DUMMY_PNG,
   IMAGE_DATA,
 }                   from '../tests/fixtures/'
 
-// import { log }      from 'brolog'
+// import { log }      from './config'
 // log.level('silly')
-// import { log as facenetLog } from 'facenet'
-// facenetLog.level('silly')
 
 const FACE_MD5_1 = '1234567890'
 const FACE_MD5_2 = 'abcdefghij'
@@ -214,6 +212,7 @@ test('recognize()', async t => {
 
 })
 
+// TODO
 // test('rememberSimilar()', async t => {
 //   for await (const blinder of blinderFixture()) {
 //     await blinder.see(FILE_DUMMY_PNG)
@@ -233,7 +232,7 @@ async function* blinderFixture() {
       'face-blinder-',
     ),
   )
-  const blinder = new Blinder(tmpDir)
+  const blinder = new FaceBlinder(tmpDir)
   await blinder.init()
 
   try {

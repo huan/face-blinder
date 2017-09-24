@@ -21,7 +21,7 @@ import {
   log,
 }                   from './config'
 
-export class Blinder {
+export class FaceBlinder {
   private nameStore:      FlashStore<string, string>
   private facenet:        Facenet
   private faceCache:      FaceCache
@@ -31,7 +31,7 @@ export class Blinder {
   constructor(
     private workDir = path.join(APP_ROOT, 'blinder.data'),
   ) {
-    log.verbose('Blinder', 'constructor()')
+    log.verbose('FaceBlinder', 'constructor()')
 
     this.facenet        = new Facenet()
     this.faceCache      = new FaceCache(this.workDir)
@@ -40,7 +40,7 @@ export class Blinder {
   }
 
   public async init(): Promise<void> {
-    log.verbose('Blinder', 'init()')
+    log.verbose('FaceBlinder', 'init()')
 
     if (!fs.existsSync(this.workDir)) {
       fs.mkdirSync(this.workDir)
@@ -55,24 +55,24 @@ export class Blinder {
   }
 
   public async quit(): Promise<void> {
-    log.verbose('Blinder', 'quit()')
+    log.verbose('FaceBlinder', 'quit()')
     await this.facenet.quit()
   }
 
   public async destroy(): Promise<void> {
-    log.verbose('Blinder', 'destroy()')
+    log.verbose('FaceBlinder', 'destroy()')
     await this.nameStore.destroy()
     await util.promisify(rimraf)(this.workDir)
   }
 
   public async see(file: string): Promise<Face[]> {
-    log.verbose('Blinder', 'see(%s)', file)
+    log.verbose('FaceBlinder', 'see(%s)', file)
 
     const updateEmbedding = async (face: Face): Promise<void> => {
       face.embedding = await this.embeddingCache.embedding(face)
       // console.log('see: ', face)
       await this.faceCache.put(face)
-      log.silly('Blinder', 'see() updateEmbedding() face(md5=%s): %s', face.md5, face.embedding)
+      log.silly('FaceBlinder', 'see() updateEmbedding() face(md5=%s): %s', face.md5, face.embedding)
     }
 
     const faceList = await this.alignmentCache.align(file)
@@ -86,28 +86,28 @@ export class Blinder {
   }
 
   public async similar(face: Face, threshold = 0.75): Promise<Face[]> {
-    log.verbose('Blinder', 'similar(%s, %s)', face, threshold)
+    log.verbose('FaceBlinder', 'similar(%s, %s)', face, threshold)
 
     const faceStore = this.faceCache.store
     const faceList  = [] as Face[]
 
     for await (const md5 of faceStore.keys()) {
-      log.silly('Blinder', 'similar() iterate for md5: %s', md5)
+      log.silly('FaceBlinder', 'similar() iterate for md5: %s', md5)
       if (md5 === face.md5) {
         continue
       }
       const otherFace = await this.faceCache.get(md5)
       if (!otherFace) {
-        log.warn('Blinder', 'similar() faceCache.get(md5) return null')
+        log.warn('FaceBlinder', 'similar() faceCache.get(md5) return null')
         continue
       }
 
-      log.silly('Blinder', 'similar() iterate for otherFace: %s: %s',
+      log.silly('FaceBlinder', 'similar() iterate for otherFace: %s: %s',
                             otherFace.md5, otherFace.embedding)
       // console.log(otherFace)
 
       const dist = face.distance(otherFace)
-      log.silly('Blinder', 'similar() dist: %s <= %s: %s', dist, threshold, dist <= threshold)
+      log.silly('FaceBlinder', 'similar() dist: %s <= %s: %s', dist, threshold, dist <= threshold)
       if (dist <= threshold) {
         faceList.push(otherFace)
         // console.log(faceList)
@@ -118,7 +118,7 @@ export class Blinder {
   }
 
   public async recognize(face: Face): Promise<string | null> {
-    log.verbose('Blinder', 'recognize(%s)', face)
+    log.verbose('FaceBlinder', 'recognize(%s)', face)
 
     const rememberedName = await this.remember(face)
     if (rememberedName) {
@@ -166,7 +166,7 @@ export class Blinder {
   public async remember(face: Face)               : Promise<string | null>
 
   public async remember(face: Face, name?: string) : Promise<void | string | null> {
-    log.verbose('Blinder', 'name(%s, %s)', face, name)
+    log.verbose('FaceBlinder', 'name(%s, %s)', face, name)
 
     if (!name) {
       const storedName = await this.nameStore.get(face.md5)
@@ -204,11 +204,11 @@ export class Blinder {
   }
 
   public file(face: Face): string {
-    log.verbose('Blinder', 'file(%s)', face)
+    log.verbose('FaceBlinder', 'file(%s)', face)
 
     return this.faceCache.file(face.md5)
   }
 
 }
 
-export default Blinder
+export default FaceBlinder

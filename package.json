@@ -2,12 +2,14 @@
   "name": "face-blinder",
   "version": "0.0.2",
   "description": "Assitant Bot for Whom is Suffering form Face Blindness",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "clean": "shx rm -fr dist/*",
+    "dist": "npm run clean && tsc",
     "lint": "tslint --project tsconfig.json && npm run clean && tsc --noEmit",
-    "start": "ts-node index.ts",
-    "test": "tape -r ts-node/register \"src/**/*.spec.ts\" \"test/**/*.spec.ts\""
+    "test": "tape -r ts-node/register \"src/**/*.spec.ts\" \"test/**/*.spec.ts\"",
+    "test:npm": "cross-env-shell TMPDIR=/tmp/npm-package-test.$$ 'npm pack && mkdir $TMPDIR && mv *-*.*.*.tgz $TMPDIR && cp tests/fixtures/smoke-testing.js $TMPDIR && cd $TMPDIR && npm init -y && npm i *-*.*.*.tgz && node smoke-testing.js'"
   },
   "repository": {
     "type": "git",
@@ -23,9 +25,7 @@
   "dependencies": {
     "app-root-path": "^2.0.1",
     "facenet": "^0.3.8",
-    "flash-store": "0.0.9",
-    "qrcode-terminal": "^0.11.0",
-    "wechaty": "^0.8.233"
+    "flash-store": "0.0.9"
   },
   "devDependencies": {
     "@types/app-root-path": "^1.2.4",
@@ -35,6 +35,7 @@
     "@types/sinon": "^2.3.5",
     "@types/sinon-test": "^1.0.2",
     "blue-tape": "^1.0.0",
+    "cross-env": "^5.0.5",
     "eslint": "^4.7.2",
     "shx": "^0.2.2",
     "sinon": "^3.3.0",
@@ -42,5 +43,14 @@
     "ts-node": "^3.3.0",
     "tslint": "^5.7.0",
     "typescript": "^2.5.2"
-  }
+  },
+  "files": [
+    "bin/",
+    "dist/",
+    "src/",
+    "CHANGELOG",
+    "LICENSE",
+    "package.json",
+    "README.md"
+  ]
 }
