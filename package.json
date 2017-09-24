@@ -15,7 +15,12 @@
     "type": "git",
     "url": "git+https://github.com/zixia/face-blinder.git"
   },
-  "keywords": [],
+  "keywords": [
+      "prosopagnosia"
+    , "face"
+    , "blindness"
+    , "recognize"
+  ],
   "author": "Huan LI <zixia@zixia.net>",
   "license": "Apache-2.0",
   "bugs": {
