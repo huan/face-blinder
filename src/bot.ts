@@ -166,7 +166,7 @@ export class Bot {
 
   private async avatarFile(contact: Contact): Promise<string> {
     const name = contact.name()
-    const avatarFileName = `${__dirname}/data/${name}.jpg`
+    const avatarFileName = `${APP_ROOT}/data/${name}.jpg`
 
     const avatarReadStream = await contact.avatar()
     const avatarWriteStream = fs.createWriteStream(avatarFileName)
