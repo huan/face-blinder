@@ -1,4 +1,4 @@
-const FaceBlinder = require('face-blinder')
+const { FaceBlinder } = require('face-blinder')
 
 async function main() {
   const blinder = new FaceBlinder()
