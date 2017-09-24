@@ -25,12 +25,14 @@
   "dependencies": {
     "app-root-path": "^2.0.1",
     "facenet": "^0.3.8",
-    "flash-store": "0.0.9"
+    "flash-store": "0.0.9",
+    "numjs": "^0.14.2"
   },
   "devDependencies": {
     "@types/app-root-path": "^1.2.4",
     "@types/blue-tape": "^0.1.31",
     "@types/node": "^8.0.28",
+    "@types/numjs": "^0.14.2",
     "@types/rimraf": "^2.0.2",
     "@types/sinon": "^2.3.5",
     "@types/sinon-test": "^1.0.2",

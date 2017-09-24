@@ -1,0 +1,49 @@
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+    - os: osx
+      osx_image: xcode9
+
+language: node_js
+node_js:
+  - "7"
+
+cache:
+  directories:
+    - node_modules
+
+before_install: # switch to python 3.5
+  - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then source ~/virtualenv/python3.5/bin/activate; fi
+
+install:
+  - if [ "$TRAVIS_OS_NAME" == 'osx' ];    then brew install python3 pkg-config cairo pango libpng; fi # jpeg giflib
+  - if [ "$TRAVIS_OS_NAME" == 'linux' ];  then sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++; fi
+  - npm install --unsafe-perm
+
+script:
+  - echo $TRAVIS_OS_NAME
+  - python3 --version
+  - node --version
+  - npm --version
+  - npm run lint
+  - npm run dist
+  - npm run test
+  - npm run test:npm && echo 'Npm packing test is passed'
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+
+before_deploy:
+  - npm version
+  - npm run dist
+
+deploy:
+  provider: npm
+  email: zixia@zixia.net
+  api_key: "$NPM_TOKEN"
+  skip_cleanup: true
+
