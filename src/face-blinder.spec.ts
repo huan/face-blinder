@@ -212,27 +212,15 @@ test('recognize()', async t => {
 
 })
 
-// TODO
-// test('rememberSimilar()', async t => {
-//   for await (const blinder of blinderFixture()) {
-//     await blinder.see(FILE_DUMMY_PNG)
-//     await blinder.remember(FACE1, FACE_MD5_1)
-//     await blinder.rememberSimilar(FACE1)
-
-//     const name = blinder.remember(FACE2)
-//     t.equal(name, FACE_MD5_1, 'should remember the similar FACE2 as the same name as FACE1')
-//   }
-// })
-
 async function* blinderFixture() {
-  const tmpDir = fs.mkdtempSync(
+  const workDir = fs.mkdtempSync(
     path.join(
       os.tmpdir(),
       path.sep,
       'face-blinder-',
     ),
   )
-  const blinder = new FaceBlinder(tmpDir)
+  const blinder = new FaceBlinder({ workDir })
   await blinder.init()
 
   try {

@@ -21,6 +21,14 @@ import {
   log,
 }                   from './config'
 
+export interface FaceBlinderOptions {
+  workDir?   : string
+  threshold? : number
+}
+
+const DEFAULT_THRESHOLD = 0.75
+const DEFAULT_WORKDIR   = 'blinder.data'
+
 export class FaceBlinder {
   private nameStore:      FlashStore<string, string>
   private facenet:        Facenet
@@ -28,10 +36,16 @@ export class FaceBlinder {
   private alignmentCache: AlignmentCache
   private embeddingCache: EmbeddingCache
 
-  constructor(
-    private workDir = path.join(APP_ROOT, 'blinder.data'),
-  ) {
+  private workDir   : string
+  private threshold : number
+
+  constructor(options?: FaceBlinderOptions) {
     log.verbose('FaceBlinder', 'constructor()')
+
+    options = options || {}
+
+    this.workDir   = options.workDir    || path.join(APP_ROOT, DEFAULT_WORKDIR)
+    this.threshold = options.threshold  || DEFAULT_THRESHOLD
 
     this.facenet        = new Facenet()
     this.faceCache      = new FaceCache(this.workDir)
@@ -85,7 +99,10 @@ export class FaceBlinder {
     return faceList
   }
 
-  public async similar(face: Face, threshold = 0.75): Promise<Face[]> {
+  public async similar(
+    face: Face,
+    threshold = this.threshold,
+  ): Promise<Face[]> {
     log.verbose('FaceBlinder', 'similar(%s, %s)', face, threshold)
 
     const faceStore = this.faceCache.store
@@ -178,29 +195,6 @@ export class FaceBlinder {
 
   public async forget(face: Face): Promise<void> {
     await this.nameStore.del(face.md5)
-  }
-
-  public async rememberSimilar(face: Face): Promise<number> {
-    let counter  = 0
-
-    const name = await this.nameStore.get(face.md5)
-    if (!name) {
-      throw new Error('rememberSimilar() face name not stored')
-    }
-
-    const faceList = await this.similar(face)
-
-    for (const similarFace of faceList) {
-      const storedName = await this.nameStore.get(face.md5)
-      if (storedName) { // do not consider '0' or ''(empty string) of name
-        continue
-      }
-
-      this.remember(similarFace, name)
-      counter++
-    }
-
-    return counter
   }
 
   public file(face: Face): string {
