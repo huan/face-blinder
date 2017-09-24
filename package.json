@@ -23,9 +23,9 @@
   "dependencies": {
     "app-root-path": "^2.0.1",
     "facenet": "^0.2.48",
-    "flash-store": "0.0.5",
+    "flash-store": "0.0.9",
     "qrcode-terminal": "^0.11.0",
-    "wechaty": "^0.8.228"
+    "wechaty": "^0.8.233"
   },
   "devDependencies": {
     "@types/app-root-path": "^1.2.4",
@@ -35,6 +35,7 @@
     "@types/sinon": "^2.3.5",
     "@types/sinon-test": "^1.0.2",
     "blue-tape": "^1.0.0",
+    "eslint": "^4.7.2",
     "shx": "^0.2.2",
     "sinon": "^3.3.0",
     "sinon-test": "^2.1.1",

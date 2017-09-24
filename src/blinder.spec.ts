@@ -5,62 +5,81 @@ import * as path  from 'path'
 
 import * as nj    from 'numjs'
 
+// tslint:disable:no-shadowed-variable
 import * as test  from 'blue-tape'
 
 import * as sinon   from 'sinon'
 // const sinonTest     = require('sinon-test')(sinon)
 
 import {
-  AlignmentCache,
-  EmbeddingCache,
   Face,
-  FaceCache,
   Facenet,
-  distance,
+  Rectangle,
 }                   from 'facenet'
 
-import { Blinder }  from './blinder'
+import Blinder      from './blinder'
 
-// import { log }    from 'brolog'
+import {
+  FILE_DUMMY_PNG,
+  IMAGE_DATA,
+}                   from '../tests/fixtures/'
+
+// import { log }      from 'brolog'
 // log.level('silly')
-
-sinon.stub(AlignmentCache.prototype,  'init').resolves()
-sinon.stub(EmbeddingCache.prototype,  'init').resolves()
-sinon.stub(Face.prototype,            'init').resolves()
-sinon.stub(FaceCache.prototype,       'init').resolves()
-sinon.stub(Facenet.prototype,         'init').resolves()
-
-const PHOTO_FILE = 'photo-file.jpg'
+// import { log as facenetLog } from 'facenet'
+// facenetLog.level('silly')
 
 const FACE_MD5_1 = '1234567890'
 const FACE_MD5_2 = 'abcdefghij'
-const FACE_MD5_3 = '!@#$%^&*()'
+const FACE_MD5_3 = 'ABCDEFGHIJ'
 
 const FACE_EMBEDDING_1 = nj.arange(128)
 const FACE_EMBEDDING_2 = nj.arange(128).add(128)
 const FACE_EMBEDDING_3 = nj.arange(128).add(256)
-
-const FACE_DISTANCE_1_2 = distance(FACE_EMBEDDING_1, FACE_EMBEDDING_2)
-const FACE_DISTANCE_2_3 = distance(FACE_EMBEDDING_2, FACE_EMBEDDING_3)
-const FACE_DISTANCE_3_1 = distance(FACE_EMBEDDING_3, FACE_EMBEDDING_1)
 
 const FACE1 = new Face()
 const FACE2 = new Face()
 const FACE3 = new Face()
 const FACE_LIST = [FACE1, FACE2, FACE3]
 
+const FACE_LOCATION = {
+  x: 0, y: 0,
+  w: IMAGE_DATA.width,
+  h: IMAGE_DATA.height,
+} as Rectangle
+
+FACE1.imageData = IMAGE_DATA
+FACE2.imageData = IMAGE_DATA
+FACE3.imageData = IMAGE_DATA
+
+const SIMILAR_TO_FACE1 = [FACE2]
+const SIMILAR_TO_FACE2 = [FACE1]
+const SIMILAR_TO_FACE3 = [FACE1, FACE2]
+
 FACE1.md5 = FACE_MD5_1
 FACE2.md5 = FACE_MD5_2
 FACE3.md5 = FACE_MD5_3
 
-sinon.stub(Facenet.prototype, 'align')
-.withArgs(PHOTO_FILE)
-.resolves(FACE_LIST)
+FACE1.location = FACE_LOCATION
+FACE2.location = FACE_LOCATION
+FACE3.location = FACE_LOCATION
 
+sinon.stub(Facenet.prototype, 'init').resolves()
+sinon.stub(Facenet.prototype, 'align').resolves(FACE_LIST)
 sinon.stub(Facenet.prototype, 'embedding')
 .withArgs(FACE1).resolves(FACE_EMBEDDING_1)
 .withArgs(FACE2).resolves(FACE_EMBEDDING_2)
 .withArgs(FACE3).resolves(FACE_EMBEDDING_3)
+
+sinon.stub(Face.prototype, 'distance')
+.callsFake(face => {
+  switch (face.md5) {
+    case FACE1.md5: return 0
+    case FACE2.md5: return 0.5
+    case FACE3.md5: return 1
+    default:        return 42
+  }
+})
 
 test('constructor()', async t => {
   for await (const blinder of blinderFixture()) {
@@ -70,9 +89,28 @@ test('constructor()', async t => {
 
 test('similar()', async t => {
   for await (const blinder of blinderFixture()) {
-    await blinder.see(PHOTO_FILE)
+    await blinder.see(FILE_DUMMY_PNG)
 
-    t.skip('should later')
+    let similarFaceList = await blinder.similar(FACE1)
+    t.deepEqual(
+      similarFaceList.map(f => f.md5),
+      SIMILAR_TO_FACE1.map(f => f.md5),
+      'should get similar faces for FACE1',
+    )
+
+    similarFaceList = await blinder.similar(FACE2)
+    t.deepEqual(
+      similarFaceList.map(f => f.md5),
+      SIMILAR_TO_FACE2.map(f => f.md5),
+      'should get similar faces for FACE2',
+    )
+
+    similarFaceList = await blinder.similar(FACE3)
+    t.deepEqual(
+      similarFaceList.map(f => f.md5),
+      SIMILAR_TO_FACE3.map(f => f.md5),
+      'should get similar faces for FACE3',
+    )
   }
 })
 
@@ -86,7 +124,7 @@ test('file()', async t => {
 
 test('see()', async t => {
   for await (const blinder of blinderFixture()) {
-    const faceList = await blinder.see(PHOTO_FILE)
+    const faceList = await blinder.see(FILE_DUMMY_PNG)
     t.deepEqual(faceList, FACE_LIST, 'should see three faces')
   }
 })
@@ -109,25 +147,83 @@ test('forget()', async t => {
   for await (const blinder of blinderFixture()) {
     await blinder.remember(FACE1, NAME)
     await blinder.forget(FACE1)
+    const name = await blinder.remember(FACE1)
     t.equal(name, null, 'should not remember the NAME after forget')
 
   }
 })
 
 test('recognize()', async t => {
-  for await (const blinder of blinderFixture()) {
-    t.ok(blinder, 'should instanciate ok')
-    t.skip('should later')
 
-  }
+  t.test('FACE1', async t => {
+    for await (const blinder of blinderFixture()) {
+      await blinder.see(FILE_DUMMY_PNG)
+
+      await blinder.remember(FACE1, FACE_MD5_1)
+
+      const name1 = await blinder.recognize(FACE1)
+      const name2 = await blinder.recognize(FACE2)
+      const name3 = await blinder.recognize(FACE3)
+      t.equal(name1, FACE_MD5_1, 'FACE1 will recognize self')
+      t.equal(name2, FACE_MD5_1, 'FACE1 will similar with FACE1')
+      t.equal(name3, FACE_MD5_1, 'FACE1 will similar with FACE3')
+    }
+  })
+
+  t.test('FACE2', async t => {
+    for await (const blinder of blinderFixture()) {
+      await blinder.see(FILE_DUMMY_PNG)
+
+      await blinder.remember(FACE2, FACE_MD5_2)
+
+      const name1 = await blinder.recognize(FACE1)
+      const name2 = await blinder.recognize(FACE2)
+      const name3 = await blinder.recognize(FACE3)
+      t.equal(name1, FACE_MD5_2, 'FACE2 will similar with FACE1')
+      t.equal(name2, FACE_MD5_2, 'FACE2 will recognize self')
+      t.equal(name3, FACE_MD5_2, 'FACE2 will similar with FACE3')
+    }
+  })
+
+  t.test('FACE3', async t => {
+    for await (const blinder of blinderFixture()) {
+      await blinder.see(FILE_DUMMY_PNG)
+
+      await blinder.remember(FACE3, FACE_MD5_3)
+
+      const name1 = await blinder.recognize(FACE1)
+      const name2 = await blinder.recognize(FACE2)
+      const name3 = await blinder.recognize(FACE3)
+      t.equal(name1, null, 'FACE3 will not similar with FACE1')
+      t.equal(name2, null, 'FACE3 will not similar with FACE2')
+      t.equal(name3, FACE_MD5_3, 'FACE3 will recognize self')
+    }
+  })
+
+  t.test('FACE1 & FACE2', async t => {
+    for await (const blinder of blinderFixture()) {
+      await blinder.see(FILE_DUMMY_PNG)
+
+      await blinder.remember(FACE1, FACE_MD5_1)
+      await blinder.remember(FACE2, FACE_MD5_2)
+
+      const name3 = await blinder.recognize(FACE3)
+      t.equal(name3, FACE_MD5_1, 'FACE1 should be recognized with FACE3')
+    }
+  })
+
 })
 
-test('rememberSimilar()', async t => {
-  for await (const blinder of blinderFixture()) {
-    t.ok(blinder, 'should instanciate ok')
-    t.skip('should later')
-  }
-})
+// test('rememberSimilar()', async t => {
+//   for await (const blinder of blinderFixture()) {
+//     await blinder.see(FILE_DUMMY_PNG)
+//     await blinder.remember(FACE1, FACE_MD5_1)
+//     await blinder.rememberSimilar(FACE1)
+
+//     const name = blinder.remember(FACE2)
+//     t.equal(name, FACE_MD5_1, 'should remember the similar FACE2 as the same name as FACE1')
+//   }
+// })
 
 async function* blinderFixture() {
   const tmpDir = fs.mkdtempSync(
@@ -140,7 +236,10 @@ async function* blinderFixture() {
   const blinder = new Blinder(tmpDir)
   await blinder.init()
 
-  yield blinder
+  try {
+    yield blinder
+  } finally {
+    await blinder.quit()
+  }
 
-  await blinder.quit()
 }
