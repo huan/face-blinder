@@ -1,4 +1,6 @@
-# FACE-BLINDER
+FACE-BLINDER
+------------
+
 [![Powered by FaceNet](https://img.shields.io/badge/Powered%20By-FaceNet-green.svg)](https://github.com/zixia/node-facenet) [![Powered by Wechaty](https://img.shields.io/badge/Powered%20By-Wechaty-green.svg)](https://github.com/chatie/wechaty/) [![Powered by ChineseWhispers](https://img.shields.io/badge/Powered%20By-ChineseWhispers-green.svg)](https://github.com/zixia/chinese-whispers)
 
 [![Build Status](https://travis-ci.org/zixia/face-blinder.svg?branch=master)](https://travis-ci.org/zixia/face-blinder) [![NPM Version](https://badge.fury.io/js/face-blinder.svg)](https://badge.fury.io/js/face-blinder) [![Downloads](http://img.shields.io/npm/dm/face-blinder.svg?style=flat-square)](https://npmjs.org/package/face-blinder) [![node](https://img.shields.io/node/v/facenet.svg?maxAge=604800)](https://nodejs.org/)
@@ -9,7 +11,8 @@ Assitant Bot for Whom is Suffering form Face Blindess
 
 > "Face blindness is a brain disorder characterized by the inability to recognize faces." - MedicineNet.com
 
-# PROSOPAGNOSIA
+PROSOPAGNOSIA
+-------------
 
 Who has prosopagnosia, commonly called face blindness, which means he/she will have trouble recognizing familiar faces and learning to recognize new ones.
 
@@ -24,7 +27,25 @@ Who has prosopagnosia, commonly called face blindness, which means he/she will h
 1. When someone gets a haircut, you may not recognize them when you see them again.
 1. You have difficulty recognizing neighbors, friends, coworkers, clients, schoolmates (etc.) out of context.
 
-# SEE
+SEE ALSO
+--------
 
 1. [I have face blindness and you might too](http://nypost.com/2017/07/21/i-have-face-blindness-and-you-might-too/)
 1. [7 signs and symptoms of face blindness / prosopagnosia](https://www.testmybrain.org/do-you-suffer-from-face-blindness-seven-signs-and-symptoms-of-prosopagnosia/)
+
+
+AUTHOR
+------
+
+Huan LI \<zixia@zixia.net\> (http://linkedin.com/in/zixia)
+
+<a href="http://stackoverflow.com/users/1123955/zixia">
+  <img src="http://stackoverflow.com/users/flair/1123955.png" width="208" height="58" alt="profile for zixia at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for zixia at Stack Overflow, Q&amp;A for professional and enthusiast programmers">
+</a>
+
+COPYRIGHT & LICENSE
+-------------------
+
+* Code & Docs © 2017 Huan LI \<zixia@zixia.net\>
+* Code released under the Apache-2.0 License
+* Docs released under Creative Commons
