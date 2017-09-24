@@ -1,6 +1,8 @@
 # FACE-BLINDER
 [![Powered by FaceNet](https://img.shields.io/badge/Powered%20By-FaceNet-green.svg)](https://github.com/zixia/node-facenet) [![Powered by Wechaty](https://img.shields.io/badge/Powered%20By-Wechaty-green.svg)](https://github.com/chatie/wechaty/) [![Powered by ChineseWhispers](https://img.shields.io/badge/Powered%20By-ChineseWhispers-green.svg)](https://github.com/zixia/chinese-whispers)
 
+[![Build Status](https://travis-ci.org/zixia/face-blinder.svg?branch=master)](https://travis-ci.org/zixia/face-blinder) [![NPM Version](https://badge.fury.io/js/face-blinder.svg)](https://badge.fury.io/js/face-blinder) [![Downloads](http://img.shields.io/npm/dm/face-blinder.svg?style=flat-square)](https://npmjs.org/package/face-blinder) [![node](https://img.shields.io/node/v/facenet.svg?maxAge=604800)](https://nodejs.org/)
+
 Assitant Bot for Whom is Suffering form Face Blindess
 
 ![Face Blindess](https://zixia.github.io/face-blinder/images/face-blindess.jpg)
