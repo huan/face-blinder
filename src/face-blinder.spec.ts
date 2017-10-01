@@ -216,7 +216,6 @@ async function* blinderFixture() {
   const workDir = fs.mkdtempSync(
     path.join(
       os.tmpdir(),
-      path.sep,
       'face-blinder-',
     ),
   )
