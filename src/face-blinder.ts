@@ -219,6 +219,18 @@ export class FaceBlinder {
     return this.faceCache.file(face.md5)
   }
 
+  public async face(md5: string): Promise<Face | null> {
+    log.verbose('FaceBlinder', 'face(%s)', md5)
+
+    const face = await this.faceCache.get(md5)
+    return face
+  }
+
+  public async list(md5Partial: string): Promise<string[]> {
+    log.verbose('FaceBlinder', 'list(%s)', md5Partial)
+    const md5List = await this.faceCache.list(md5Partial)
+    return md5List
+  }
 }
 
 export default FaceBlinder
