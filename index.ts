@@ -1,3 +1,5 @@
+export *        from 'facenet'
+
 export {
   log,
 }               from './src/config'

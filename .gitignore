@@ -62,6 +62,6 @@ typings/
 package-lock.json
 t.*
 .*.swp
-/blinder.data/
+/face-blinder.data/
 /dist/
 /t/
