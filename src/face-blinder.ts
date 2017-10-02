@@ -27,7 +27,7 @@ export interface FaceBlinderOptions {
 }
 
 const DEFAULT_THRESHOLD = 0.75
-const DEFAULT_WORKDIR   = 'blinder.data'
+const DEFAULT_WORKDIR   = 'face-blinder.data'
 
 export class FaceBlinder {
   private nameStore:      FlashStore<string, string>
@@ -75,8 +75,23 @@ export class FaceBlinder {
 
   public async destroy(): Promise<void> {
     log.verbose('FaceBlinder', 'destroy()')
-    await this.nameStore.destroy()
-    await util.promisify(rimraf)(this.workDir)
+    let err
+    try {
+      await this.nameStore.destroy()
+    } catch (e) {
+      log.error('FaceBlinder', 'destroy() exception: %s', e)
+      err = e
+    }
+    try {
+      await util.promisify(rimraf)(this.workDir)
+    } catch (e) {
+      log.error('FaceBlinder', 'destroy() exception: %s', e)
+      err = e
+    }
+
+    if (err) {
+      throw err
+    }
   }
 
   public async see(file: string): Promise<Face[]> {
@@ -164,6 +179,7 @@ export class FaceBlinder {
 
     const distance = {}
     for (const name in nameDistanceListMap) {
+      // TODO: better algorithm needed at here
       const distanceList = nameDistanceListMap[name]
       distance[name] = distanceList.reduce((pre, cur) => pre + cur, 0)
       distance[name] /= distanceList.length
