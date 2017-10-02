@@ -213,13 +213,13 @@ test('recognize()', async t => {
 })
 
 async function* blinderFixture() {
-  const workDir = fs.mkdtempSync(
+  const workdir = fs.mkdtempSync(
     path.join(
       os.tmpdir(),
       'face-blinder-',
     ),
   )
-  const blinder = new FaceBlinder({ workDir })
+  const blinder = new FaceBlinder({ workdir })
   await blinder.init()
 
   try {

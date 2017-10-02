@@ -22,12 +22,12 @@ import {
 }                   from './config'
 
 export interface FaceBlinderOptions {
-  workDir?   : string
+  workdir?   : string
   threshold? : number
 }
 
 const DEFAULT_THRESHOLD = 0.75
-const DEFAULT_WORKDIR   = 'face-blinder.data'
+const DEFAULT_WORKDIR   = 'face-blinder.workdir'
 
 export class FaceBlinder {
   private nameStore:      FlashStore<string, string>
@@ -36,7 +36,7 @@ export class FaceBlinder {
   private alignmentCache: AlignmentCache
   private embeddingCache: EmbeddingCache
 
-  private workDir   : string
+  private workdir   : string
   private threshold : number
 
   constructor(options?: FaceBlinderOptions) {
@@ -44,23 +44,23 @@ export class FaceBlinder {
 
     options = options || {}
 
-    this.workDir   = options.workDir    || path.join(APP_ROOT, DEFAULT_WORKDIR)
+    this.workdir   = options.workdir    || path.join(APP_ROOT, DEFAULT_WORKDIR)
     this.threshold = options.threshold  || DEFAULT_THRESHOLD
 
     this.facenet        = new Facenet()
-    this.faceCache      = new FaceCache(this.workDir)
-    this.alignmentCache = new AlignmentCache(this.facenet, this.faceCache, this.workDir)
-    this.embeddingCache = new EmbeddingCache(this.facenet, this.workDir)
+    this.faceCache      = new FaceCache(this.workdir)
+    this.alignmentCache = new AlignmentCache(this.facenet, this.faceCache, this.workdir)
+    this.embeddingCache = new EmbeddingCache(this.facenet, this.workdir)
   }
 
   public async init(): Promise<void> {
     log.verbose('FaceBlinder', 'init()')
 
-    if (!fs.existsSync(this.workDir)) {
-      fs.mkdirSync(this.workDir)
+    if (!fs.existsSync(this.workdir)) {
+      fs.mkdirSync(this.workdir)
     }
 
-    this.nameStore = new FlashStore(path.join(this.workDir, 'name.store'))
+    this.nameStore = new FlashStore(path.join(this.workdir, 'name.store'))
 
     await this.facenet.init()
     await this.faceCache.init()
@@ -83,7 +83,7 @@ export class FaceBlinder {
       err = e
     }
     try {
-      await util.promisify(rimraf)(this.workDir)
+      await util.promisify(rimraf)(this.workdir)
     } catch (e) {
       log.error('FaceBlinder', 'destroy() exception: %s', e)
       err = e
