@@ -29,8 +29,8 @@
   "homepage": "https://github.com/zixia/face-blinder#readme",
   "dependencies": {
     "app-root-path": "^2.0.1",
-    "facenet": "^0.3.8",
-    "flash-store": "0.0.9",
+    "facenet": "^0.3.16",
+    "flash-store": "^0.0.18",
     "numjs": "^0.14.2"
   },
   "devDependencies": {
