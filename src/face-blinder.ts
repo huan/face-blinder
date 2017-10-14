@@ -124,10 +124,10 @@ export class FaceBlinder {
    * See faces from the image file.
    *
    * FaceBlinder should init first, then can see faces.
-   * @param {string} file
-   * @returns {Promise<Face[]>}
    *
    * [Example/see-face]{@link https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts}
+   * @param {string} file
+   * @returns {Promise<Face[]>}
    * @example
    * const faceBlinder = new FaceBlinder()
    * await faceBlinder.init()
@@ -158,11 +158,10 @@ export class FaceBlinder {
   /**
    * Get All Similar Face from the database.
    *
+   * [Example/demo]{@link https://github.com/zixia/face-blinder/blob/master/examples/demo.ts}
    * @param {Face} face
    * @param {number} [threshold=this.threshold] - threshold to judge two faces similarity, defatult is 0.75, you can change the number you prefer.
    * @returns {Promise<Face[]>}
-   *
-   * [Example/demo]{@link https://github.com/zixia/face-blinder/blob/master/examples/demo.ts}
    * @example
    * const faceList = await blinder.see(`${__dirname}/../examples/demo.jpg`)
    * const similarFaceList = await blinder.similar(faceList[i])
@@ -292,10 +291,9 @@ export class FaceBlinder {
   /**
    * Save the face to file
    *
+   * [Example/see-face]{@link https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts}
    * @param {Face} face
    * @returns {string}  - return file directory
-   *
-   * [Example/see-face]{@link https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts}
    * @example
    * const faceList = await faceBlinder.see(imageFile)
    * for (const face of faceList) {

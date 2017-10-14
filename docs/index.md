@@ -69,8 +69,9 @@ See faces from the image file.
 
 FaceBlinder should init first, then can see faces.
 
+[Example/see-face](https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts)
+
 **Kind**: instance method of [<code>FaceBlinder</code>](#FaceBlinder)  
-**Returns**: <code>Promise.&lt;Array.&lt;Face&gt;&gt;</code> - [Example/see-face](https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts)  
 
 | Param | Type |
 | --- | --- |
@@ -89,8 +90,9 @@ console.log(faceList[0])
 ### faceBlinder.similar(face, [threshold]) ⇒ <code>Promise.&lt;Array.&lt;Face&gt;&gt;</code>
 Get All Similar Face from the database.
 
+[Example/demo](https://github.com/zixia/face-blinder/blob/master/examples/demo.ts)
+
 **Kind**: instance method of [<code>FaceBlinder</code>](#FaceBlinder)  
-**Returns**: <code>Promise.&lt;Array.&lt;Face&gt;&gt;</code> - [Example/demo](https://github.com/zixia/face-blinder/blob/master/examples/demo.ts)  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -147,10 +149,10 @@ Forget the face in the database
 ### faceBlinder.file(face) ⇒ <code>string</code>
 Save the face to file
 
-**Kind**: instance method of [<code>FaceBlinder</code>](#FaceBlinder)  
-**Returns**: <code>string</code> - - return file directory
+[Example/see-face](https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts)
 
-[Example/see-face](https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts)  
+**Kind**: instance method of [<code>FaceBlinder</code>](#FaceBlinder)  
+**Returns**: <code>string</code> - - return file directory  
 
 | Param | Type |
 | --- | --- |
