@@ -6,7 +6,7 @@ async function main() {
   const faceBlinder = new FaceBlinder()
   await faceBlinder.init()
 
-  const imageFile = `${__dirname}/../examples/demo.jpg`
+  const imageFile = `${__dirname}/../examples/image/demo.jpg`
   console.log('====== Trying to see faces from demo picture.====== \n')
   const faceList = await faceBlinder.see(imageFile)
   for (const face of faceList) {
@@ -17,9 +17,9 @@ async function main() {
 
   // function similar
   console.log('====== Trying to get similar face between zixia.jpg and demo.jpg. ====== \n')
-  const zixiaFile = `${__dirname}/../examples/zixia.jpg`
-  const getZixiaList = await faceBlinder.see(zixiaFile)
-  const similarFaceList = await faceBlinder.similar(getZixiaList[0])
+  const zixiaFile = `${__dirname}/../examples/image/zixia.jpg`
+  const zixiaFaceList = await faceBlinder.see(zixiaFile)
+  const similarFaceList = await faceBlinder.similar(zixiaFaceList[0])
   for (const face of similarFaceList) {
     const fileName = await faceBlinder.file(face)
     console.log(`Get Zixia similar faces: ${similarFaceList.length}, See it in ${fileName}. \n\n`)
@@ -27,7 +27,7 @@ async function main() {
 
   // function recognize
   console.log('====== Trying to recogonize zixia face Using zixia.jpg. ====== \n')
-  const recognizedName = await faceBlinder.recognize(getZixiaList[0]) || 'Who?'
+  const recognizedName = await faceBlinder.recognize(zixiaFaceList[0]) || 'Who?'
   console.log(`recognize zixia: ${recognizedName}`)
 
   faceBlinder.quit()

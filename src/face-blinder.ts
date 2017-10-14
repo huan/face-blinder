@@ -159,7 +159,7 @@ export class FaceBlinder {
    * Get All Similar Face from the database.
    *
    * [Example/demo]{@link https://github.com/zixia/face-blinder/blob/master/examples/demo.ts}
-   * @param {Face} face
+   * @param {Face} face                         - the face to compare
    * @param {number} [threshold=this.threshold] - threshold to judge two faces similarity, defatult is 0.75, you can change the number you prefer.
    * @returns {Promise<Face[]>}
    * @example

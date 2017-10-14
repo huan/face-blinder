@@ -96,7 +96,7 @@ Get All Similar Face from the database.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| face | <code>Face</code> |  |  |
+| face | <code>Face</code> |  | the face to compare |
 | [threshold] | <code>number</code> | <code>this.threshold</code> | threshold to judge two faces similarity, defatult is 0.75, you can change the number you prefer. |
 
 **Example**  
