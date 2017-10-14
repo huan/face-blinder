@@ -131,7 +131,7 @@ Remeber the face.
 | Param | Type | Description |
 | --- | --- | --- |
 | face | <code>Face</code> |  |
-| [name] | <code>string</code> | if not null,  set the name for this face. <br>                        - if null, the face name is face.md5 by default. |
+| [name] | <code>string</code> | if not null,  set the name for this face. <br>                          if null, the face name is face.md5 by default. |
 
 <a name="FaceBlinder+forget"></a>
 

@@ -264,7 +264,7 @@ export class FaceBlinder {
    *
    * @param {Face} face
    * @param {string} [name] - if not null,  set the name for this face. <br>
-   *                        - if null, the face name is face.md5 by default.
+   *                          if null, the face name is face.md5 by default.
    * @returns {(Promise<void | string | null>)}
    */
   public async remember(face: Face, name?: string) : Promise<void | string | null> {

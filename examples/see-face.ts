@@ -1,6 +1,8 @@
 import { FaceBlinder } 		from '../'
 
 async function main() {
+  console.log('Welcome to Face-Blinder,I am an assitant bot for whom is suffering form face blindess')
+  console.log('Init face blinder... \n')
   const faceBlinder = new FaceBlinder()
   await faceBlinder.init()
   const imageFile = `${__dirname}/../examples/demo.jpg`
