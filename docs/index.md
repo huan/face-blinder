@@ -70,6 +70,7 @@ See faces from the image file.
 FaceBlinder should init first, then can see faces.
 
 **Kind**: instance method of [<code>FaceBlinder</code>](#FaceBlinder)  
+**Returns**: <code>Promise.&lt;Array.&lt;Face&gt;&gt;</code> - [Example/see-face](https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts)  
 
 | Param | Type |
 | --- | --- |
@@ -82,7 +83,6 @@ await faceBlinder.init()
 const imageFile = `${__dirname}/../examples/demo.jpg`
 const faceList = await faceBlinder.see(imageFile)
 console.log(faceList[0])
-[Example/see-face](https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts)
 ```
 <a name="FaceBlinder+similar"></a>
 
@@ -90,6 +90,7 @@ console.log(faceList[0])
 Get All Similar Face from the database.
 
 **Kind**: instance method of [<code>FaceBlinder</code>](#FaceBlinder)  
+**Returns**: <code>Promise.&lt;Array.&lt;Face&gt;&gt;</code> - [Example/demo](https://github.com/zixia/face-blinder/blob/master/examples/demo.ts)  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -100,7 +101,6 @@ Get All Similar Face from the database.
 ```js
 const faceList = await blinder.see(`${__dirname}/../examples/demo.jpg`)
 const similarFaceList = await blinder.similar(faceList[i])
-[Example/demo](https://github.com/zixia/face-blinder/blob/master/examples/demo.ts)
 ```
 <a name="FaceBlinder+recognize"></a>
 
@@ -148,7 +148,9 @@ Forget the face in the database
 Save the face to file
 
 **Kind**: instance method of [<code>FaceBlinder</code>](#FaceBlinder)  
-**Returns**: <code>string</code> - - return file directory  
+**Returns**: <code>string</code> - - return file directory
+
+[Example/see-face](https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts)  
 
 | Param | Type |
 | --- | --- |
@@ -161,7 +163,6 @@ for (const face of faceList) {
   const fileName = await faceBlinder.file(face)
   console.log(`Save file to ${fileName}`)
 }
-[Example/see-face](https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts)
 ```
 <a name="FaceBlinder+face"></a>
 

@@ -126,13 +126,14 @@ export class FaceBlinder {
    * FaceBlinder should init first, then can see faces.
    * @param {string} file
    * @returns {Promise<Face[]>}
+   *
+   * [Example/see-face]{@link https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts}
    * @example
    * const faceBlinder = new FaceBlinder()
    * await faceBlinder.init()
    * const imageFile = `${__dirname}/../examples/demo.jpg`
    * const faceList = await faceBlinder.see(imageFile)
    * console.log(faceList[0])
-   * [Example/see-face]{@link https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts}
    */
   public async see(file: string): Promise<Face[]> {
     log.verbose('FaceBlinder', 'see(%s)', file)
@@ -160,10 +161,11 @@ export class FaceBlinder {
    * @param {Face} face
    * @param {number} [threshold=this.threshold] - threshold to judge two faces similarity, defatult is 0.75, you can change the number you prefer.
    * @returns {Promise<Face[]>}
+   *
+   * [Example/demo]{@link https://github.com/zixia/face-blinder/blob/master/examples/demo.ts}
    * @example
    * const faceList = await blinder.see(`${__dirname}/../examples/demo.jpg`)
    * const similarFaceList = await blinder.similar(faceList[i])
-   * [Example/demo]{@link https://github.com/zixia/face-blinder/blob/master/examples/demo.ts}
    */
   public async similar(
     face: Face,
@@ -292,13 +294,14 @@ export class FaceBlinder {
    *
    * @param {Face} face
    * @returns {string}  - return file directory
+   *
+   * [Example/see-face]{@link https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts}
    * @example
    * const faceList = await faceBlinder.see(imageFile)
    * for (const face of faceList) {
    *   const fileName = await faceBlinder.file(face)
    *   console.log(`Save file to ${fileName}`)
    * }
-   * [Example/see-face]{@link https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts}
    */
   public file(face: Face): string {
     log.verbose('FaceBlinder', 'file(%s)', face)
