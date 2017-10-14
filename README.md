@@ -11,6 +11,45 @@ Assitant Bot for Whom is Suffering form Face Blindess
 
 > "Face blindness is a brain disorder characterized by the inability to recognize faces." - MedicineNet.com
 
+INSTALL
+-------------
+```
+npm install
+```
+
+EXAMPLE
+-------------
+try `npm run demo`
+
+The following example show you how to see face and get the similarity of the two face:
+```ts
+import { FaceBlinder } 		from 'face-blinder'
+
+const faceBlinder = new FaceBlinder()
+await faceBlinder.init()
+
+const imageFile = `${__dirname}/../examples/image/demo.jpg`
+const faceList = await faceBlinder.see(imageFile)
+console.log(`See ${faceList.length} faces from the demofile and save them to the file. \n\n`)
+
+// similar function
+const similarFaceList = await faceBlinder.similar(faceList[0])
+console.log(`Get Zixia similar faces: ${similarFaceList.length}, See it in ${fileName}. \n\n`)
+
+faceBlinder.quit()
+```
+
+more examples:
+
+[demo](https://github.com/zixia/face-blinder/blob/master/examples/demo.ts): Try see face, get similar face and recognize face.    
+[face-see-and-save](https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts): See faces from a image and save them to local file.     
+[wechaty-blinder](https://github.com/zixia/wechaty-blinder): Connect with wechat using wechaty   
+
+DOCUMENT
+-------------
+
+See [auto generated docs](https://zixia.github.io/face-blinder)
+
 PROSOPAGNOSIA
 -------------
 
