@@ -23,7 +23,7 @@ try `npm run demo`
 
 The following example show you how to see face and get the similarity of the two face:
 ```ts
-import { FaceBlinder } 		from 'face-blinder'
+import { FaceBlinder } from 'face-blinder'
 
 const faceBlinder = new FaceBlinder()
 await faceBlinder.init()
@@ -34,7 +34,7 @@ console.log(`See ${faceList.length} faces from the demofile and save them to the
 
 // similar function
 const similarFaceList = await faceBlinder.similar(faceList[0])
-console.log(`Get Zixia similar faces: ${similarFaceList.length}, See it in ${fileName}. \n\n`)
+console.log(`Get Zixia similar faces: ${similarFaceList.length}. \n\n`)
 
 faceBlinder.quit()
 ```

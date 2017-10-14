@@ -27,7 +27,7 @@ async function main() {
 
   // function recognize
   console.log('====== Trying to recogonize zixia face Using zixia.jpg. ====== \n')
-  const recognizedName = await faceBlinder.recognize(zixiaFaceList[0]) || 'Who?'
+  const recognizedName = await faceBlinder.recognize(faceList[0]) || 'Who?'
   console.log(`recognize zixia: ${recognizedName}`)
 
   faceBlinder.quit()
