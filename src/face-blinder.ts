@@ -68,6 +68,9 @@ export class FaceBlinder {
    * Init the FaceBlinder
    *
    * @returns {Promise<void>}
+   * @example
+   * const faceBlinder = new FaceBlinder()
+   * await faceBlinder.init()
    */
   public async init(): Promise<void> {
     log.verbose('FaceBlinder', 'init()')
@@ -85,9 +88,11 @@ export class FaceBlinder {
   }
 
   /**
-   * Quit FaceBlinder
+   * Quit FaceBlinder, should quit when not use facelinder
    *
    * @returns {Promise<void>}
+   * @example
+   * await faceBlinder.quit()
    */
   public async quit(): Promise<void> {
     log.verbose('FaceBlinder', 'quit()')
@@ -131,7 +136,7 @@ export class FaceBlinder {
    * @example
    * const faceBlinder = new FaceBlinder()
    * await faceBlinder.init()
-   * const imageFile = `${__dirname}/../examples/demo.jpg`
+   * const imageFile = `image/zhizunbao-zixia.jpg`
    * const faceList = await faceBlinder.see(imageFile)
    * console.log(faceList[0])
    */
@@ -158,13 +163,17 @@ export class FaceBlinder {
   /**
    * Get All Similar Face from the database.
    *
-   * [Example/demo]{@link https://github.com/zixia/face-blinder/blob/master/examples/demo.ts}
+   * [Example/find-similar-face]{@link https://github.com/zixia/face-blinder/blob/master/examples/find-similar-face.ts}
    * @param {Face} face                         - the face to compare
    * @param {number} [threshold=this.threshold] - threshold to judge two faces similarity, defatult is 0.75, you can change the number you prefer.
    * @returns {Promise<Face[]>}
    * @example
-   * const faceList = await blinder.see(`${__dirname}/../examples/demo.jpg`)
+   * // faceBlinder should have some faces before, then it can get the similar face. Try Example/find-similar-face.ts
+   * const faceList = await blinder.see(`image/zhizunbao-zixia.jpg`)
    * const similarFaceList = await blinder.similar(faceList[i])
+   * for (const face of similarFaceList) {
+   *   console.log(`Get ${similarFaceList.length} similar face.`)
+   * }
    */
   public async similar(
     face: Face,
@@ -204,11 +213,15 @@ export class FaceBlinder {
   /**
    * Recognize face and return all related face name(here equal to face md5) from database
    *
+   * [Example/recogonize-face]{@link https://github.com/zixia/face-blinder/blob/master/examples/recogonize-face.ts}
    * @param {Face} face
    * @returns {(Promise<string | null>)} - faceNameList, a face md5 array
    * @example
-   * const faceList = await blinder.see(`${__dirname}/../examples/demo.jpg`)
+   * // Should remember the face before recogonize the face.
+   * const faceList = await blinder.see(`image/zixia.jpg`)
+   * await faceBlinder.remember(faceList[0], 'Zixia')
    * const recognizedName = await blinder.recognize(faceList[0]) || 'Who?'
+   * console.log(`Recognize result: ${recognizedName}`)
    */
   public async recognize(face: Face): Promise<string | null> {
     log.verbose('FaceBlinder', 'recognize(%s)', face)
@@ -266,6 +279,9 @@ export class FaceBlinder {
    * @param {string} [name] - if not null,  set the name for this face. <br>
    *                          if null, the face name is face.md5 by default.
    * @returns {(Promise<void | string | null>)}
+   * @example
+   * const faceList = await blinder.see(`image/zixia.jpg`)
+   * await faceBlinder.remember(faceList[0], 'Zixia')
    */
   public async remember(face: Face, name?: string) : Promise<void | string | null> {
     log.verbose('FaceBlinder', 'name(%s, %s)', face, name)
@@ -279,10 +295,13 @@ export class FaceBlinder {
   }
 
   /**
-   *
    * Forget the face in the database
+   *
    * @param {Face} face
    * @returns {Promise<void>}
+   * @example
+   * const faceList = await blinder.see(`image/zixia.jpg`)
+   * await faceBlinder.forget(faceList[0])
    */
   public async forget(face: Face): Promise<void> {
     await this.nameStore.del(face.md5)
@@ -295,7 +314,7 @@ export class FaceBlinder {
    * @param {Face} face
    * @returns {string}  - return file directory
    * @example
-   * const faceList = await faceBlinder.see(imageFile)
+   * const faceList = await faceBlinder.see('image/zhizunbao-zixia.jpg')
    * for (const face of faceList) {
    *   const fileName = await faceBlinder.file(face)
    *   console.log(`Save file to ${fileName}`)
@@ -326,7 +345,8 @@ export class FaceBlinder {
    * @param {string} md5Partial
    * @returns {Promise<string[]>}
    * @example
-   * let md5Partial = `2436` // just an example for a md5Partial, change a more similar partial as you like.
+   * // just an example for a md5Partial, change a more similar partial as you like.
+   * let md5Partial = `2436`
    * const md5List = await blinder.list(md5Partial)
    * if (md5List.length === 0) {
    *   console.log('no such md5')
