@@ -42,7 +42,7 @@ more examples:
 
 * [see-face](https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts): Recognize two faces from `zhizunbao-zixia.jpg`, then save them to local file.
 * [find-similar-face](https://github.com/zixia/face-blinder/blob/master/examples/find-similar-face.ts): Recognize face in `zixia.jpg` and get similar face from `zhizunbao-zixia.jpg`.     
-* [recogonize-face](https://github.com/zixia/face-blinder/blob/master/examples/recogonize-face.ts): I can learn Zixia face from `zixia.jpg`, then recognize Zixia from `zhizunbao-zixia.jpg`.
+* [recogonize-face](https://github.com/zixia/face-blinder/blob/master/examples/recogonize-face.ts): Learn Zixia face from `zixia.jpg`, then recognize Zixia from `zhizunbao-zixia.jpg`.
 * [wechaty-blinder](https://github.com/zixia/wechaty-blinder): An interesting project connet [wechaty](github.com/chatie/wechaty) with [face-blinder](https://github.com/zixia/face-blinder). Make face-blinder works on a personal wechat.
 
 DOCUMENT
