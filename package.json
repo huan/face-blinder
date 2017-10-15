@@ -35,10 +35,10 @@
     "app-root-path": "^2.0.1",
     "facenet": "^0.3.19",
     "flash-store": "^0.0.18",
-    "jsdoc-to-markdown": "^3.0.0",
     "numjs": "^0.14.2"
   },
   "devDependencies": {
+    "jsdoc-to-markdown": "^3.0.0",
     "@types/app-root-path": "^1.2.4",
     "@types/blue-tape": "^0.1.31",
     "@types/node": "^8.0.28",
