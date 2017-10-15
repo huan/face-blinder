@@ -19,31 +19,31 @@ npm install
 
 EXAMPLE
 -------------
-try `npm run demo`
+* try `npm run see` to see faces from image.   
+* try `npm run similar` to get similar faces from two images.   
+* try `npm run recogonize` to recogonize faces from two images.
 
-The following example show you how to see face and get the similarity of the two face:
+The following example show you the basic function.
 ```ts
 import { FaceBlinder } from 'face-blinder'
 
 const faceBlinder = new FaceBlinder()
 await faceBlinder.init()
 
-const imageFile = `${__dirname}/../examples/image/demo.jpg`
-const faceList = await faceBlinder.see(imageFile)
-console.log(`See ${faceList.length} faces from the demofile and save them to the file. \n\n`)
-
-// similar function
-const similarFaceList = await faceBlinder.similar(faceList[0])
-console.log(`Get Zixia similar faces: ${similarFaceList.length}. \n\n`)
+const faceList  = await faceBlinder.see(`zhizunbao-zixia.jpg`)
+await faceBlinder.remember(faceList[0], 'Zixia')
+const recognizedZixia = await faceBlinder.recognize(faceList[0])
+console.log(`Recognize Zixia result: ${recognizedZixia}`)
 
 faceBlinder.quit()
 ```
 
 more examples:
 
-[demo](https://github.com/zixia/face-blinder/blob/master/examples/demo.ts): Try see face, get similar face and recognize face.    
-[face-see-and-save](https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts): See faces from a image and save them to local file.     
-[wechaty-blinder](https://github.com/zixia/wechaty-blinder): Connect with wechat using wechaty   
+* [see-face](https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts): Recognize two faces from `zhizunbao-zixia.jpg`, then save them to local file.
+* [find-similar-face](https://github.com/zixia/face-blinder/blob/master/examples/find-similar-face.ts): Recognize face in `zixia.jpg` and get similar face from `zhizunbao-zixia.jpg`.     
+* [recogonize-face](https://github.com/zixia/face-blinder/blob/master/examples/recogonize-face.ts): I can learn Zixia face from `zixia.jpg`, then recognize Zixia from `zhizunbao-zixia.jpg`.
+* [wechaty-blinder](https://github.com/zixia/wechaty-blinder): An interesting project connet [wechaty](github.com/chatie/wechaty) with [face-blinder](https://github.com/zixia/face-blinder). Make face-blinder works on a personal wechat.
 
 DOCUMENT
 -------------
