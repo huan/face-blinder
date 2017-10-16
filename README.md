@@ -11,6 +11,45 @@ Assitant Bot for Whom is Suffering form Face Blindess
 
 > "Face blindness is a brain disorder characterized by the inability to recognize faces." - MedicineNet.com
 
+INSTALL
+-------------
+```
+npm install
+```
+
+EXAMPLE
+-------------
+* try `npm run see` to see faces from image.   
+* try `npm run similar` to get similar faces from two images.   
+* try `npm run recogonize` to recogonize faces from two images.
+
+The following example show you the basic function.
+```ts
+import { FaceBlinder } from 'face-blinder'
+
+const faceBlinder = new FaceBlinder()
+await faceBlinder.init()
+
+const faceList  = await faceBlinder.see(`zhizunbao-zixia.jpg`)
+await faceBlinder.remember(faceList[0], 'Zixia')
+const recognizedZixia = await faceBlinder.recognize(faceList[0])
+console.log(`Recognize Zixia result: ${recognizedZixia}`)
+
+faceBlinder.quit()
+```
+
+more examples:
+
+* [see-face](https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts): Recognize two faces from `zhizunbao-zixia.jpg`, then save them to local file.
+* [find-similar-face](https://github.com/zixia/face-blinder/blob/master/examples/find-similar-face.ts): Recognize face in `zixia.jpg` and get similar face from `zhizunbao-zixia.jpg`.     
+* [recogonize-face](https://github.com/zixia/face-blinder/blob/master/examples/recogonize-face.ts): Learn Zixia face from `zixia.jpg`, then recognize Zixia from `zhizunbao-zixia.jpg`.
+* [wechaty-blinder](https://github.com/zixia/wechaty-blinder): An interesting project connet [wechaty](github.com/chatie/wechaty) with [face-blinder](https://github.com/zixia/face-blinder). Make face-blinder works on a personal wechat.
+
+DOCUMENT
+-------------
+
+See [auto generated docs](https://zixia.github.io/face-blinder)
+
 PROSOPAGNOSIA
 -------------
 
