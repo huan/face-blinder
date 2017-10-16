@@ -117,7 +117,7 @@ export class FaceBlinder {
       err = e
     }
     try {
-      await util.promisify(rimraf)(this.options.workdir)
+      await util.promisify(rimraf)(this.options.workdir as string)
     } catch (e) {
       log.error('FaceBlinder', 'destroy() exception: %s', e)
       err = e
