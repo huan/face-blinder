@@ -24,10 +24,12 @@ import {
 export interface FaceBlinderOptions {
   workdir?   : string
   threshold? : number
+  minSize?    : number
 }
 
 const DEFAULT_THRESHOLD = 0.75
 const DEFAULT_WORKDIR   = 'face-blinder.workdir'
+const DEFAULT_MIN_SIZE  = 80
 
 export class FaceBlinder {
   private nameStore:      FlashStore<string, string>
@@ -36,31 +38,32 @@ export class FaceBlinder {
   private alignmentCache: AlignmentCache
   private embeddingCache: EmbeddingCache
 
-  private workdir   : string
-  private threshold : number
-
-  constructor(options?: FaceBlinderOptions) {
+  constructor(
+    public options: FaceBlinderOptions = {},
+  ) {
     log.verbose('FaceBlinder', 'constructor()')
 
-    options = options || {}
-
-    this.workdir   = options.workdir    || path.join(APP_ROOT, DEFAULT_WORKDIR)
-    this.threshold = options.threshold  || DEFAULT_THRESHOLD
+    this.options.workdir   = this.options.workdir   || path.join(APP_ROOT, DEFAULT_WORKDIR)
+    this.options.threshold = this.options.threshold || DEFAULT_THRESHOLD
+    this.options.minSize   = this.options.minSize   || DEFAULT_MIN_SIZE
 
     this.facenet        = new Facenet()
-    this.faceCache      = new FaceCache(this.workdir)
-    this.alignmentCache = new AlignmentCache(this.facenet, this.faceCache, this.workdir)
-    this.embeddingCache = new EmbeddingCache(this.facenet, this.workdir)
+    this.faceCache      = new FaceCache(this.options.workdir)
+    this.alignmentCache = new AlignmentCache(this.facenet, this.faceCache, this.options.workdir)
+    this.embeddingCache = new EmbeddingCache(this.facenet, this.options.workdir)
   }
 
   public async init(): Promise<void> {
     log.verbose('FaceBlinder', 'init()')
 
-    if (!fs.existsSync(this.workdir)) {
-      fs.mkdirSync(this.workdir)
+    if (!fs.existsSync(this.options.workdir as string)) {
+      fs.mkdirSync(this.options.workdir as string)
     }
 
-    this.nameStore = new FlashStore(path.join(this.workdir, 'name.store'))
+    this.nameStore = new FlashStore(path.join(
+      this.options.workdir as string,
+      'name.store',
+    ))
 
     await this.facenet.init()
     await this.faceCache.init()
@@ -83,7 +86,7 @@ export class FaceBlinder {
       err = e
     }
     try {
-      await util.promisify(rimraf)(this.workdir)
+      await util.promisify(rimraf)(this.options.workdir)
     } catch (e) {
       log.error('FaceBlinder', 'destroy() exception: %s', e)
       err = e
@@ -100,23 +103,34 @@ export class FaceBlinder {
     const updateEmbedding = async (face: Face): Promise<void> => {
       face.embedding = await this.embeddingCache.embedding(face)
       // console.log('see: ', face)
+
       await this.faceCache.put(face)
       log.silly('FaceBlinder', 'see() updateEmbedding() face(md5=%s): %s', face.md5, face.embedding)
     }
 
     const faceList = await this.alignmentCache.align(file)
+
+    const bigFaceList   = faceList.filter(face => {
+      if (face.width > (this.options.minSize as number)) {
+        return true
+      }
+      log.verbose('FaceBlinder', 'see() face(%s) too small(%dx%d), skipped.',
+                                  face.md5, face.width, face.height)
+      return false
+    })
+
     await Promise.all(
-      faceList
+      bigFaceList
       .filter(f => !f.embedding)
       .map(updateEmbedding),
     )
 
-    return faceList
+    return bigFaceList
   }
 
   public async similar(
     face: Face,
-    threshold = this.threshold,
+    threshold = this.options.threshold as number,
   ): Promise<Face[]> {
     log.verbose('FaceBlinder', 'similar(%s, %s)', face, threshold)
 
@@ -134,9 +148,17 @@ export class FaceBlinder {
         continue
       }
 
-      log.silly('FaceBlinder', 'similar() iterate for otherFace: %s: %s',
-                            otherFace.md5, otherFace.embedding)
-      // console.log(otherFace)
+      if (otherFace.width < (this.options.minSize as number)) {
+        log.verbose('FaceBlinder', 'similar() otherFace too small(%s<%s), skipped',
+                                    otherFace.width, this.options.minSize)
+        continue
+      }
+
+      if (!otherFace.embedding) {
+        log.warn('FaceBlinder', 'similar() otherFace.embedding is empty, updating...')
+        otherFace.embedding = await this.embeddingCache.embedding(otherFace)
+        await this.faceCache.put(otherFace)
+      }
 
       const dist = face.distance(otherFace)
       log.silly('FaceBlinder', 'similar() dist: %s <= %s: %s', dist, threshold, dist <= threshold)
