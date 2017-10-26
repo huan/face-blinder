@@ -287,7 +287,7 @@ export class FaceBlinder {
     }
 
     const nameList = Object.keys(distance)
-                                  .sort((a, b) => distance[a] - distance[b])
+                          .sort((a, b) => distance[a] - distance[b])
     return nameList[0]  // minimum distance
   }
 
