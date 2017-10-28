@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "clean": "shx rm -fr dist/*",
+    "clean": "shx rm -fr dist/* *-*.*.*.tgz",
     "dist": "npm run clean && tsc && shx cp package.json dist/",
     "see": "ts-node examples/see-face.ts",
     "similar": "ts-node examples/find-similar-face.ts",
