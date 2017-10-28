@@ -19,6 +19,7 @@ import {
 
 import {
   log,
+  VERSION,
 }                   from './config'
 
 export interface FaceBlinderOptions {
@@ -62,6 +63,13 @@ export class FaceBlinder {
     this.faceCache      = new FaceCache(this.options.workdir)
     this.alignmentCache = new AlignmentCache(this.facenet, this.faceCache, this.options.workdir)
     this.embeddingCache = new EmbeddingCache(this.facenet, this.options.workdir)
+  }
+
+  /**
+   * Get the version
+   */
+  public version(): string {
+    return VERSION
   }
 
   /**
