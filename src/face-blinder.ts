@@ -57,7 +57,9 @@ export class FaceBlinder {
 
     this.options.workdir   = this.options.workdir   || path.join(APP_ROOT, DEFAULT_WORKDIR)
     this.options.threshold = this.options.threshold || DEFAULT_THRESHOLD
-    this.options.minSize   = this.options.minSize   || DEFAULT_MIN_SIZE
+    this.options.minSize   = typeof this.options.minSize === 'undefined'
+                              ? DEFAULT_MIN_SIZE
+                              : this.options.minSize
 
     this.facenet        = new Facenet()
     this.faceCache      = new FaceCache(this.options.workdir)

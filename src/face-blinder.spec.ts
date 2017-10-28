@@ -14,8 +14,10 @@ import * as sinon   from 'sinon'
 import {
   Face,
   Facenet,
+  // log as facenetLog,
   Rectangle,
 }                   from 'facenet'
+// facenetLog.level('silly')
 
 import FaceBlinder  from './face-blinder'
 
@@ -27,6 +29,9 @@ import {
 // import { log }      from './config'
 // log.level('silly')
 
+/**
+ * FIXTURES
+ */
 const FACE_MD5_1 = '1234567890'
 const FACE_MD5_2 = 'abcdefghij'
 const FACE_MD5_3 = 'ABCDEFGHIJ'
@@ -79,6 +84,31 @@ sinon.stub(Face.prototype, 'distance')
   }
 })
 
+async function* blinderFixture() {
+  const workdir = fs.mkdtempSync(
+    path.join(
+      os.tmpdir(),
+      'face-blinder-',
+    ),
+  )
+  const minSize = 0
+  const blinder = new FaceBlinder({
+    workdir,
+    minSize,
+  })
+  await blinder.init()
+
+  try {
+    yield blinder
+  } finally {
+    await blinder.quit()
+  }
+
+}
+
+/**
+ * UNIT TESTS
+ */
 test('constructor()', async t => {
   for await (const blinder of blinderFixture()) {
     t.ok(blinder, 'should instanciate ok')
@@ -211,21 +241,3 @@ test('recognize()', async t => {
   })
 
 })
-
-async function* blinderFixture() {
-  const workdir = fs.mkdtempSync(
-    path.join(
-      os.tmpdir(),
-      'face-blinder-',
-    ),
-  )
-  const blinder = new FaceBlinder({ workdir })
-  await blinder.init()
-
-  try {
-    yield blinder
-  } finally {
-    await blinder.quit()
-  }
-
-}
