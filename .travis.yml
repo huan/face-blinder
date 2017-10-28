@@ -8,7 +8,7 @@ matrix:
 
 language: node_js
 node_js:
-  - "7"
+  - "8"
 
 cache:
   directories:
@@ -28,8 +28,6 @@ script:
   - python3 --version
   - node --version
   - npm --version
-  - npm run lint
-  - npm run dist
   - npm run test
   - npm run test:npm && echo 'Npm packing test is passed'
 
