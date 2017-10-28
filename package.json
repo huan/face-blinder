@@ -34,7 +34,7 @@
   "dependencies": {
     "app-root-path": "^2.0",
     "facenet": "^0.3",
-    "flash-store": "^0.0",
+    "flash-store": "^0.1.4",
     "numjs": "^0.14"
   },
   "devDependencies": {
@@ -50,9 +50,9 @@
     "eslint": "^4.7.2",
     "jsdoc-to-markdown": "^3.0.0",
     "shx": "^0.2.2",
-    "sinon": "^3.3.0",
+    "sinon": "^4.0.2",
     "sinon-test": "^2.1.1",
-    "source-map-support": "^0.4.18",
+    "source-map-support": "^0.5.0",
     "ts-node": "^3.3.0",
     "tslint": "^5.7.0",
     "typescript": "^2.5.2"
