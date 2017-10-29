@@ -1,6 +1,6 @@
 {
   "name": "face-blinder",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Assitant Bot for Whom is Suffering form Face Blindness",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
