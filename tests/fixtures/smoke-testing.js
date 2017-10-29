@@ -3,6 +3,7 @@ const { FaceBlinder } = require('face-blinder')
 async function main() {
   const blinder = new FaceBlinder()
   try {
+    console.log(`FaceBlinder v${blinder.version}`)
     await blinder.init()
   } catch (e) {
     console.error(e)
