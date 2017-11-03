@@ -239,7 +239,8 @@ export class FaceBlinder {
       }
     }
 
-    return faceList
+    // sort faceList by distance
+    return faceList.sort((a, b) => face.distance(a) - face.distance(b))
   }
 
   /**
