@@ -57,7 +57,7 @@
     "facenet": "^0.6.0",
     "jsdoc-to-markdown": "^3.0.0",
     "shx": "^0.2.2",
-    "sinon": "^4.0.2",
+    "sinon": "^4.1.2",
     "sinon-test": "^2.1.1",
     "source-map-support": "^0.5.0",
     "ts-node": "^3.3.0",
