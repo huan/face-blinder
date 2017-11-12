@@ -85,12 +85,17 @@ export class FaceBlinder {
   public async init(): Promise<void> {
     log.verbose('FaceBlinder', 'init()')
 
-    if (!fs.existsSync(this.options.workdir as string)) {
-      fs.mkdirSync(this.options.workdir as string)
+    const workdir = this.options.workdir
+    if (!workdir) {
+      throw new Error('no workdir!')
+    }
+
+    if (!fs.existsSync(workdir)) {
+      fs.mkdirSync(workdir)
     }
 
     this.nameStore = new FlashStore(path.join(
-      this.options.workdir as string,
+      workdir,
       'name.store',
     ))
 
@@ -156,6 +161,8 @@ export class FaceBlinder {
   public async see(file: string): Promise<Face[]> {
     log.verbose('FaceBlinder', 'see(%s)', file)
 
+    const minSize = this.options.minSize || DEFAULT_MIN_SIZE
+
     const updateEmbedding = async (face: Face): Promise<void> => {
       face.embedding = await this.embeddingCache.embedding(face)
       // console.log('see: ', face)
@@ -167,7 +174,7 @@ export class FaceBlinder {
     const faceList = await this.alignmentCache.align(file)
 
     const bigFaceList   = faceList.filter(face => {
-      if (face.width > (this.options.minSize as number)) {
+      if (face.width > minSize) {
         return true
       }
       log.verbose('FaceBlinder', 'see() face(%s) too small(%dx%d), skipped.',
