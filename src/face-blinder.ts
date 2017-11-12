@@ -201,7 +201,7 @@ export class FaceBlinder {
    */
   public async similar(
     face: Face,
-    threshold = this.options.threshold as number,
+    threshold = this.options.threshold || DEFAULT_THRESHOLD,
   ): Promise<Face[]> {
     log.verbose('FaceBlinder', 'similar(%s, %s)', face, threshold)
 
