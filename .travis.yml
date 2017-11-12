@@ -23,7 +23,7 @@ script:
   - node --version
   - npm --version
   - npm run test
-  - npm run test:npm && echo 'Npm packing test is passed'
+  - npm run test:pack && echo 'Npm packing test is passed'
 
 notifications:
   email:
