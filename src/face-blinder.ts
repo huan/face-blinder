@@ -8,6 +8,7 @@ import {
 }                   from 'app-root-path'
 import {
   AlignmentCache,
+  distance,
   EmbeddingCache,
   FaceCache,
   Facenet,
@@ -212,35 +213,46 @@ export class FaceBlinder {
   ): Promise<Face[]> {
     log.verbose('FaceBlinder', 'similar(%s, %s)', face, threshold)
 
-    const faceStore = this.faceCache.store
-    const faceList  = [] as Face[]
+    const embeddingStore = this.faceCache.embeddingStore
+    const faceList       = [] as Face[]
 
-    for await (const md5 of faceStore.keys()) {
+    for await (const md5 of embeddingStore.keys()) {
       log.silly('FaceBlinder', 'similar() iterate for md5: %s', md5)
       if (md5 === face.md5) {
         continue
       }
-      const otherFace = await this.faceCache.get(md5)
-      if (!otherFace) {
-        log.warn('FaceBlinder', 'similar() faceCache.get(md5) return null')
+      const otherEmbedding = await embeddingStore.get(md5)
+      if (!otherEmbedding) {
+        log.warn('FaceBlinder', 'similar() embeddingStore.get(md5) return null')
         continue
       }
 
-      if (otherFace.width < (this.options.minSize as number)) {
-        log.verbose('FaceBlinder', 'similar() otherFace too small(%s<%s), skipped',
-                                    otherFace.width, this.options.minSize)
-        continue
+      // if (!otherEmbedding) {
+      //   log.warn('FaceBlinder', 'similar() otherFace.embedding is empty, updating...')
+      //   otherFace.embedding = await this.embeddingCache.embedding(otherFace)
+      //   await this.faceCache.put(otherFace)
+      // }
+
+      const embedding = face.embedding
+      if (!embedding) {
+        log.warn('FaceBlinder', 'similar() face.embedding not exist.')
+        return []
       }
 
-      if (!otherFace.embedding) {
-        log.warn('FaceBlinder', 'similar() otherFace.embedding is empty, updating...')
-        otherFace.embedding = await this.embeddingCache.embedding(otherFace)
-        await this.faceCache.put(otherFace)
-      }
-
-      const dist = face.distance(otherFace)
+      const dist = distance(embedding, otherEmbedding)[0]
       log.silly('FaceBlinder', 'similar() dist: %s <= %s: %s', dist, threshold, dist <= threshold)
       if (dist <= threshold) {
+        const otherFace = await this.faceCache.get(md5)
+        if (!otherFace) {
+          log.warn('FaceBlinder', 'similar() faceCache.get(%s) return null', md5)
+          continue
+        }
+        if (otherFace.width < (this.options.minSize || DEFAULT_MIN_SIZE)) {
+          log.verbose('FaceBlinder', 'similar() otherFace too small(%s<%s), skipped',
+                                      otherFace.width, this.options.minSize)
+          continue
+        }
+
         faceList.push(otherFace)
         // console.log(faceList)
       }
@@ -291,21 +303,21 @@ export class FaceBlinder {
       nameDistanceListMap[name].push(dist)
     }
 
-    const distance = {}
+    const distanceMap = {}
     for (const name in nameDistanceListMap) {
       // TODO: better algorithm needed at here
       const distanceList = nameDistanceListMap[name]
-      distance[name] = distanceList.reduce((pre, cur) => pre + cur, 0)
-      distance[name] /= distanceList.length
-      distance[name] /= (Math.log(distanceList.length) + 1)
+      distanceMap[name] = distanceList.reduce((pre, cur) => pre + cur, 0)
+      distanceMap[name] /= distanceList.length
+      distanceMap[name] /= (Math.log(distanceList.length) + 1)
     }
 
     if (!Object.keys(nameDistanceListMap).length) {
       return null
     }
 
-    const nameList = Object.keys(distance)
-                          .sort((a, b) => distance[a] - distance[b])
+    const nameList = Object.keys(distanceMap)
+                          .sort((a, b) => distanceMap[a] - distanceMap[b])
     return nameList[0]  // minimum distance
   }
 
