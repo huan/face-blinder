@@ -415,6 +415,23 @@ export class FaceBlinder {
     const md5List = await this.faceCache.list(md5Partial)
     return md5List
   }
+
+  public async updateEmbeddingStore(): Promise<void> {
+    const store          = this.faceCache.store
+    const embeddingStore = this.faceCache.embeddingStore
+
+    log.info('FaceBlinder', 'updateEmbeddingStore()')
+    for await (const md5 of store.keys()) {
+      const face = await this.faceCache.get(md5)
+      if (face && face.embedding) {
+        log.info('FaceBlinder', 'updateEmbeddingStore() updating for %s', md5)
+        await embeddingStore.put(md5, face.embedding.tolist())
+      } else {
+        log.info('FaceBlinder', 'updateEmbeddingStore() no embedding for %s', md5)
+      }
+    }
+    log.info('FaceBlinder', 'updateEmbeddingStore() done')
+  }
 }
 
 export default FaceBlinder
