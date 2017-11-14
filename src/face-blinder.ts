@@ -8,7 +8,6 @@ import {
 }                   from 'app-root-path'
 import {
   AlignmentCache,
-  distance,
   EmbeddingCache,
   FaceCache,
   Facenet,
@@ -162,7 +161,7 @@ export class FaceBlinder {
   public async see(file: string): Promise<Face[]> {
     log.verbose('FaceBlinder', 'see(%s)', file)
 
-    const minSize = this.options.minSize || DEFAULT_MIN_SIZE
+    const minSize = this.options.minSize as number  // could be zero, do not use ||
 
     const updateEmbedding = async (face: Face): Promise<void> => {
       face.embedding = await this.embeddingCache.embedding(face)
@@ -213,6 +212,13 @@ export class FaceBlinder {
   ): Promise<Face[]> {
     log.verbose('FaceBlinder', 'similar(%s, %s)', face, threshold)
 
+    const faceEmbedding = face.embedding
+    if (!faceEmbedding) {
+      log.warn('FaceBlinder', 'similar() face.embedding not exist.')
+      return []
+    }
+    const embedding = faceEmbedding.tolist()
+
     const embeddingStore = this.faceCache.embeddingStore
     const faceList       = [] as Face[]
 
@@ -233,21 +239,16 @@ export class FaceBlinder {
       //   await this.faceCache.put(otherFace)
       // }
 
-      const embedding = face.embedding
-      if (!embedding) {
-        log.warn('FaceBlinder', 'similar() face.embedding not exist.')
-        return []
-      }
-
-      const dist = distance(embedding, otherEmbedding)[0]
+      const dist = this.facenet.distance(embedding, [otherEmbedding])[0]
       log.silly('FaceBlinder', 'similar() dist: %s <= %s: %s', dist, threshold, dist <= threshold)
+
       if (dist <= threshold) {
         const otherFace = await this.faceCache.get(md5)
         if (!otherFace) {
           log.warn('FaceBlinder', 'similar() faceCache.get(%s) return null', md5)
           continue
         }
-        if (otherFace.width < (this.options.minSize || DEFAULT_MIN_SIZE)) {
+        if (otherFace.width < (this.options.minSize as number)) {
           log.verbose('FaceBlinder', 'similar() otherFace too small(%s<%s), skipped',
                                       otherFace.width, this.options.minSize)
           continue

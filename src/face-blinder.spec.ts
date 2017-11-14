@@ -45,6 +45,10 @@ const FACE2 = new Face()
 const FACE3 = new Face()
 const FACE_LIST = [FACE1, FACE2, FACE3]
 
+FACE1.embedding = FACE_EMBEDDING_1
+FACE2.embedding = FACE_EMBEDDING_2
+FACE3.embedding = FACE_EMBEDDING_3
+
 const FACE_LOCATION = {
   x: 0, y: 0,
   w: IMAGE_DATA.width,
@@ -74,6 +78,21 @@ sinon.stub(Facenet.prototype, 'embedding')
 .withArgs(FACE2).resolves(FACE_EMBEDDING_2)
 .withArgs(FACE3).resolves(FACE_EMBEDDING_3)
 
+sinon.stub(Facenet.prototype, 'distance')
+.callsFake((embedding, embeddingList) => {
+  const targetEmbedding = embeddingList[0] as number[]
+  // console.log('embedding', embedding)
+  // console.log('targetEmbedding', targetEmbedding)
+  // console.log('stringify', JSON.stringify(targetEmbedding))
+  // console.log('expected ', JSON.stringify(FACE_EMBEDDING_2.tolist()))
+  switch (JSON.stringify(targetEmbedding)) {
+    case JSON.stringify(FACE_EMBEDDING_1.tolist()): return [0]
+    case JSON.stringify(FACE_EMBEDDING_2.tolist()): return [0.5]
+    case JSON.stringify(FACE_EMBEDDING_3.tolist()): return [1]
+    default:                                        return [42]
+  }
+})
+
 sinon.stub(Face.prototype, 'distance')
 .callsFake(face => {
   switch (face.md5) {
@@ -91,7 +110,7 @@ async function* blinderFixture() {
       'face-blinder-',
     ),
   )
-  const minSize = 0
+  const minSize = 1
   const blinder = new FaceBlinder({
     workdir,
     minSize,
