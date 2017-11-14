@@ -14,7 +14,7 @@
     "lint": "npm run clean && tslint --project tsconfig.json && tsc --noEmit",
     "test": "npm run lint && npm run test:unit",
     "test:unit": "blue-tape -r ts-node/register -r source-map-support/register \"src/**/*.spec.ts\" \"test/**/*.spec.ts\"",
-    "test:pack": "cross-env-shell TMPDIR=/tmp/npm-package-test.$$ 'mkdir $TMPDIR && npm run dist && npm pack && mv *-*.*.*.tgz $TMPDIR && cp tests/fixtures/smoke-testing.js $TMPDIR && cd $TMPDIR && npm init -y && npm i *-*.*.*.tgz facenet && node smoke-testing.js'"
+    "test:pack": "cross-env-shell TMPDIR=/tmp/npm-package-test.$$ 'mkdir $TMPDIR && npm run dist && npm pack && mv *-*.*.*.tgz $TMPDIR && cp tests/fixtures/smoke-testing.js $TMPDIR && cd $TMPDIR && npm init -y && npm i *-*.*.*.tgz facenet numjs flash-store && node smoke-testing.js'"
   },
   "repository": {
     "type": "git",

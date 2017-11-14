@@ -14,7 +14,7 @@ Assitant Bot for Whom is Suffering form Face Blindess
 INSTALL
 -------
 ```
-npm install face-blinder numjs flash-store
+npm install face-blinder facenet numjs flash-store
 ```
 
 ### Peer Dependence
