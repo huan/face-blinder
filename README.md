@@ -12,13 +12,18 @@ Assitant Bot for Whom is Suffering form Face Blindess
 > "Face blindness is a brain disorder characterized by the inability to recognize faces." - MedicineNet.com
 
 INSTALL
--------------
+-------
 ```
-npm install
+npm install face-blinder facenet numjs flash-store
 ```
 
+### Peer Dependence
+1. `facenet`
+1. `numjs`
+1. `flash-store`
+
 EXAMPLE
--------------
+-------
 * try `npm run see` to see faces from image.   
 * try `npm run similar` to get similar faces from two images.   
 * try `npm run recogonize` to recogonize faces from two images.
@@ -46,7 +51,7 @@ more examples:
 * [wechaty-blinder](https://github.com/zixia/wechaty-blinder): An interesting project connet [wechaty](github.com/chatie/wechaty) with [face-blinder](https://github.com/zixia/face-blinder). Make face-blinder works on a personal wechat.
 
 DOCUMENT
--------------
+--------
 
 See [auto generated docs](https://zixia.github.io/face-blinder)
 

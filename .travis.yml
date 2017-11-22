@@ -22,6 +22,7 @@ script:
   - python3 --version
   - node --version
   - npm --version
+  - npm install facenet numjs flash-store # install peer dependencies
   - npm run test
   - npm run test:pack && echo 'Npm packing test is passed'
 
