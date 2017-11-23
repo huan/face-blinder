@@ -172,12 +172,12 @@ export class FaceBlinder {
     const faceList = await this.alignmentCache.align(file)
 
     const bigFaceList   = faceList.filter(face => {
-      if (face.width > minSize) {
-        return true
+      if (face.width < minSize) {
+        log.verbose('FaceBlinder', 'see() face(%s) too small(%dx%d), skipped.',
+                                    face.md5, face.width, face.height)
+        return false
       }
-      log.verbose('FaceBlinder', 'see() face(%s) too small(%dx%d), skipped.',
-                                  face.md5, face.width, face.height)
-      return false
+      return true
     })
 
     await Promise.all(
@@ -206,7 +206,7 @@ export class FaceBlinder {
    */
   public async similar(
     face: Face,
-    threshold = this.options.threshold as number,
+    threshold = this.options.threshold || DEFAULT_THRESHOLD,
   ): Promise<Face[]> {
     log.verbose('FaceBlinder', 'similar(%s, %s)', face, threshold)
 
