@@ -13,9 +13,7 @@ import {
   Facenet,
   Face,
 }                   from 'facenet'
-import {
-  FlashStore,
-}                   from 'flash-store'
+import FlashStore   from 'flash-store'
 
 import {
   log,
@@ -25,12 +23,12 @@ import {
 export interface FaceBlinderOptions {
   workdir?   : string
   threshold? : number
-  minSize?    : number
+  minSize?   : number
 }
 
 const DEFAULT_THRESHOLD = 0.75
 const DEFAULT_WORKDIR   = 'face-blinder.workdir'
-const DEFAULT_MIN_SIZE  = 80
+const DEFAULT_MIN_SIZE  = 10
 
 export class FaceBlinder {
   private nameStore:      FlashStore<string, string>
