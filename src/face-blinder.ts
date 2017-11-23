@@ -173,7 +173,7 @@ export class FaceBlinder {
 
     const faceList = await this.alignmentCache.align(file)
 
-    const bigFaceList   = faceList.filter(face => {
+    const bigFaceList = faceList.filter(face => {
       if (face.width < minSize) {
         log.verbose('FaceBlinder', 'see() face(%s) too small(%dx%d), skipped.',
                                     face.md5, face.width, face.height)
