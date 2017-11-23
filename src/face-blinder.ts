@@ -13,9 +13,7 @@ import {
   Facenet,
   Face,
 }                   from 'facenet'
-import {
-  FlashStore,
-}                   from 'flash-store'
+import FlashStore   from 'flash-store'
 
 import {
   log,
@@ -25,12 +23,12 @@ import {
 export interface FaceBlinderOptions {
   workdir?   : string
   threshold? : number
-  minSize?    : number
+  minSize?   : number
 }
 
 const DEFAULT_THRESHOLD = 0.75
 const DEFAULT_WORKDIR   = 'face-blinder.workdir'
-const DEFAULT_MIN_SIZE  = 10
+const DEFAULT_MIN_SIZE  = 0
 
 export class FaceBlinder {
   private nameStore:      FlashStore<string, string>
@@ -174,12 +172,12 @@ export class FaceBlinder {
     const faceList = await this.alignmentCache.align(file)
 
     const bigFaceList = faceList.filter(face => {
-      if (face.width < minSize) {
-        log.verbose('FaceBlinder', 'see() face(%s) too small(%dx%d), skipped.',
-                                    face.md5, face.width, face.height)
-        return false
+      if (face.width >= minSize) {
+        return true
       }
-      return true
+      log.verbose('FaceBlinder', 'see() face(%s) too small(%dx%d), skipped.',
+                                  face.md5, face.width, face.height)
+      return false
     })
 
     await Promise.all(
@@ -219,7 +217,7 @@ export class FaceBlinder {
     }
     const embedding = faceEmbedding.tolist()
 
-    const embeddingStore = this.faceCache.embeddingStore
+    const embeddingStore = this.embeddingCache.store
     const faceList       = [] as Face[]
 
     for await (const md5 of embeddingStore.keys()) {
