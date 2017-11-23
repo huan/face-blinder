@@ -217,7 +217,7 @@ export class FaceBlinder {
     }
     const embedding = faceEmbedding.tolist()
 
-    const embeddingStore = this.embeddingCache.store
+    const embeddingStore = this.faceCache.embeddingStore
     const faceList       = [] as Face[]
 
     for await (const md5 of embeddingStore.keys()) {
