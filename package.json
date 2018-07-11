@@ -34,7 +34,7 @@
   "homepage": "https://github.com/zixia/face-blinder#readme",
   "dependencies": {
     "app-root-path": "^2.0",
-    "brolog": "^1.2.8",
+    "brolog": "^1.8.1",
     "read-pkg-up": "^4.0.0"
   },
   "peerDependencies": {
