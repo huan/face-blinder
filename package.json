@@ -59,7 +59,7 @@
     "git-scripts": "^0.2.1",
     "jsdoc-to-markdown": "^4.0.0",
     "numjs": "^0.15.0",
-    "shx": "^0.2.2",
+    "shx": "^0.3.2",
     "sinon": "^6.0.0",
     "sinon-test": "^2.1.2",
     "source-map-support": "^0.5.0",
