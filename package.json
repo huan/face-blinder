@@ -55,7 +55,7 @@
     "cross-env": "^5.0.5",
     "eslint": "^5.0.0",
     "facenet": "^0.10.1",
-    "flash-store": "^0.6.1",
+    "flash-store": "^0.6.5",
     "git-scripts": "^0.2.1",
     "jsdoc-to-markdown": "^4.0.0",
     "shx": "^0.3.2",
