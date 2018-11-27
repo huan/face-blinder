@@ -1,13 +1,13 @@
 FACE-BLINDER
 ------------
 
-[![Powered by FaceNet](https://img.shields.io/badge/Powered%20By-FaceNet-green.svg)](https://github.com/zixia/node-facenet) [![Powered by TypeScript](https://img.shields.io/badge/Powered%20By-TypeScript-blue.svg)](https://www.typescriptlang.org/) [![Greenkeeper badge](https://badges.greenkeeper.io/zixia/face-blinder.svg)](https://greenkeeper.io/)
+[![Powered by FaceNet](https://img.shields.io/badge/Powered%20By-FaceNet-green.svg)](https://github.com/huan/node-facenet) [![Powered by TypeScript](https://img.shields.io/badge/Powered%20By-TypeScript-blue.svg)](https://www.typescriptlang.org/) [![Greenkeeper badge](https://badges.greenkeeper.io/huan/face-blinder.svg)](https://greenkeeper.io/)
 
-[![Build Status](https://travis-ci.com/zixia/face-blinder.svg?branch=master)](https://travis-ci.com/zixia/face-blinder) [![NPM Version](https://badge.fury.io/js/face-blinder.svg)](https://badge.fury.io/js/face-blinder) [![Downloads](http://img.shields.io/npm/dm/face-blinder.svg?style=flat-square)](https://npmjs.org/package/face-blinder)
+[![Build Status](https://travis-ci.com/huan/face-blinder.svg?branch=master)](https://travis-ci.com/huan/face-blinder) [![NPM Version](https://badge.fury.io/js/face-blinder.svg)](https://badge.fury.io/js/face-blinder) [![Downloads](http://img.shields.io/npm/dm/face-blinder.svg?style=flat-square)](https://npmjs.org/package/face-blinder)
 
 Assitant Bot for Whom is Suffering form Face Blindess
 
-![Face Blindess](https://zixia.github.io/face-blinder/images/face-blindess.jpg)
+![Face Blindess](https://huan.github.io/face-blinder/images/face-blindess.jpg)
 
 > "Face blindness is a brain disorder characterized by the inability to recognize faces." - MedicineNet.com
 
@@ -45,15 +45,15 @@ faceBlinder.quit()
 
 more examples:
 
-* [see-face](https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts): Recognize two faces from `zhizunbao-zixia.jpg`, then save them to local file.
-* [find-similar-face](https://github.com/zixia/face-blinder/blob/master/examples/find-similar-face.ts): Recognize face in `zixia.jpg` and get similar face from `zhizunbao-zixia.jpg`.     
-* [recogonize-face](https://github.com/zixia/face-blinder/blob/master/examples/recogonize-face.ts): Learn Zixia face from `zixia.jpg`, then recognize Zixia from `zhizunbao-zixia.jpg`.
-* [wechaty-blinder](https://github.com/zixia/wechaty-blinder): An interesting project connet [wechaty](github.com/chatie/wechaty) with [face-blinder](https://github.com/zixia/face-blinder). Make face-blinder works on a personal wechat.
+* [see-face](https://github.com/huan/face-blinder/blob/master/examples/see-face.ts): Recognize two faces from `zhizunbao-zixia.jpg`, then save them to local file.
+* [find-similar-face](https://github.com/huan/face-blinder/blob/master/examples/find-similar-face.ts): Recognize face in `zixia.jpg` and get similar face from `zhizunbao-zixia.jpg`.     
+* [recogonize-face](https://github.com/huan/face-blinder/blob/master/examples/recogonize-face.ts): Learn Zixia face from `zixia.jpg`, then recognize Zixia from `zhizunbao-zixia.jpg`.
+* [wechaty-blinder](https://github.com/huan/wechaty-blinder): An interesting project connet [wechaty](github.com/chatie/wechaty) with [face-blinder](https://github.com/huan/face-blinder). Make face-blinder works on a personal wechat.
 
 DOCUMENT
 --------
 
-See [auto generated docs](https://zixia.github.io/face-blinder)
+See [auto generated docs](https://huan.github.io/face-blinder)
 
 PROSOPAGNOSIA
 -------------

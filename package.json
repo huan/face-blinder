@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zixia/face-blinder.git"
+    "url": "git+https://github.com/huan/face-blinder.git"
   },
   "keywords": [
     "prosopagnosia",
@@ -29,9 +29,9 @@
   "author": "Huan LI <zixia@zixia.net>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/zixia/face-blinder/issues"
+    "url": "https://github.com/huan/face-blinder/issues"
   },
-  "homepage": "https://github.com/zixia/face-blinder#readme",
+  "homepage": "https://github.com/huan/face-blinder#readme",
   "dependencies": {
     "app-root-path": "^2.0",
     "brolog": "^1.2.8",

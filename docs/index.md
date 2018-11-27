@@ -78,7 +78,7 @@ See faces from the image file.
 
 FaceBlinder should init first, then can see faces.
 
-[Example/see-face](https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts)
+[Example/see-face](https://github.com/huan/face-blinder/blob/master/examples/see-face.ts)
 
 **Kind**: instance method of [<code>FaceBlinder</code>](#FaceBlinder)  
 
@@ -99,7 +99,7 @@ console.log(faceList[0])
 ### faceBlinder.similar(face, [threshold]) ⇒ <code>Promise.&lt;Array.&lt;Face&gt;&gt;</code>
 Get All Similar Face from the database.
 
-[Example/find-similar-face](https://github.com/zixia/face-blinder/blob/master/examples/find-similar-face.ts)
+[Example/find-similar-face](https://github.com/huan/face-blinder/blob/master/examples/find-similar-face.ts)
 
 **Kind**: instance method of [<code>FaceBlinder</code>](#FaceBlinder)  
 
@@ -122,7 +122,7 @@ for (const face of similarFaceList) {
 ### faceBlinder.recognize(face) ⇒ <code>Promise.&lt;(string\|null)&gt;</code>
 Recognize face and return all related face name(here equal to face md5) from database
 
-[Example/recogonize-face](https://github.com/zixia/face-blinder/blob/master/examples/recogonize-face.ts)
+[Example/recogonize-face](https://github.com/huan/face-blinder/blob/master/examples/recogonize-face.ts)
 
 **Kind**: instance method of [<code>FaceBlinder</code>](#FaceBlinder)  
 **Returns**: <code>Promise.&lt;(string\|null)&gt;</code> - - faceNameList, a face md5 array  
@@ -177,7 +177,7 @@ await faceBlinder.forget(faceList[0])
 ### faceBlinder.file(face) ⇒ <code>string</code>
 Save the face to file
 
-[Example/see-face](https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts)
+[Example/see-face](https://github.com/huan/face-blinder/blob/master/examples/see-face.ts)
 
 **Kind**: instance method of [<code>FaceBlinder</code>](#FaceBlinder)  
 **Returns**: <code>string</code> - - return file directory  

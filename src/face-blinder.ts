@@ -146,7 +146,7 @@ export class FaceBlinder {
    *
    * FaceBlinder should init first, then can see faces.
    *
-   * [Example/see-face]{@link https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts}
+   * [Example/see-face]{@link https://github.com/huan/face-blinder/blob/master/examples/see-face.ts}
    * @param {string} file
    * @returns {Promise<Face[]>}
    * @example
@@ -192,7 +192,7 @@ export class FaceBlinder {
   /**
    * Get All Similar Face from the database.
    *
-   * [Example/find-similar-face]{@link https://github.com/zixia/face-blinder/blob/master/examples/find-similar-face.ts}
+   * [Example/find-similar-face]{@link https://github.com/huan/face-blinder/blob/master/examples/find-similar-face.ts}
    * @param {Face} face                         - the face to compare
    * @param {number} [threshold=this.threshold] - threshold to judge two faces similarity, defatult is 0.75, you can change the number you prefer.
    * @returns {Promise<Face[]>}
@@ -264,7 +264,7 @@ export class FaceBlinder {
   /**
    * Recognize face and return all related face name(here equal to face md5) from database
    *
-   * [Example/recogonize-face]{@link https://github.com/zixia/face-blinder/blob/master/examples/recogonize-face.ts}
+   * [Example/recogonize-face]{@link https://github.com/huan/face-blinder/blob/master/examples/recogonize-face.ts}
    * @param {Face} face
    * @returns {(Promise<string | null>)} - faceNameList, a face md5 array
    * @example
@@ -361,7 +361,7 @@ export class FaceBlinder {
   /**
    * Save the face to file
    *
-   * [Example/see-face]{@link https://github.com/zixia/face-blinder/blob/master/examples/see-face.ts}
+   * [Example/see-face]{@link https://github.com/huan/face-blinder/blob/master/examples/see-face.ts}
    * @param {Face} face
    * @returns {string}  - return file directory
    * @example
